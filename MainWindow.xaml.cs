@@ -16,10 +16,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WpfApp.CustomMarkers;
-using WpfApp.models;
+using GpsMapRoutes.CustomMarkers;
+using GpsMapRoutes.models;
 
-namespace WpfApp
+namespace GpsMapRoutes
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml

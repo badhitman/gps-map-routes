@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WpfApp.models
+namespace GpsMapRoutes.models
 {
     public class PipelineModel : AbstractModel
     {

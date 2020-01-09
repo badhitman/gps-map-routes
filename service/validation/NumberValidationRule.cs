@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace WpfApp
+namespace GpsMapRoutes
 {
     public class NumberValidationRule : ValidationRule
     {

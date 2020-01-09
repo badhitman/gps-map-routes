@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
-using WpfApp.models;
+using GpsMapRoutes.models;
 
-namespace WpfApp.service
+namespace GpsMapRoutes.service
 {
     public class PipelinesContext : DbContext
     {

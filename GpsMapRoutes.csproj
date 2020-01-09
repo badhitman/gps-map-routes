@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{29332E05-EA16-46A2-BC6C-7EFD4B391D11}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WpfApp</RootNamespace>
-    <AssemblyName>WpfApp</AssemblyName>
+    <RootNamespace>GpsMapRoutes</RootNamespace>
+    <AssemblyName>GpsMapRoutes</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

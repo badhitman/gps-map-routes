@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Windows;
 using System;
 
-namespace WpfApp
+namespace GpsMapRoutes
 {
     /// <summary>
     /// the custom map f GMapControl 

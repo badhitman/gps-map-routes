@@ -6,10 +6,10 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using WpfApp.service;
-using WpfApp.service.commands;
+using GpsMapRoutes.service;
+using GpsMapRoutes.service.commands;
 
-namespace WpfApp.models
+namespace GpsMapRoutes.models
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {

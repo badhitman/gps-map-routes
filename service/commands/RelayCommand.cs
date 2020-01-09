@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace WpfApp.service.commands
+namespace GpsMapRoutes.service.commands
 {
     public class RelayCommand : ICommand
     {

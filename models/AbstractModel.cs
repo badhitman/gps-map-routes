@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
-namespace WpfApp.models
+namespace GpsMapRoutes.models
 {
     public abstract class AbstractModel : INotifyPropertyChanged
     {

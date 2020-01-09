@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using GMap.NET.WindowsPresentation;
 
-namespace WpfApp.CustomMarkers
+namespace GpsMapRoutes.CustomMarkers
 {
     /// <summary>
     /// Interaction logic for CustomMarkerDemo.xaml

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace WpfApp
+namespace GpsMapRoutes
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml
