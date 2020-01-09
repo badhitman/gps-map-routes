@@ -24,6 +24,7 @@ namespace GpsMapRoutes
         public event PropertyChangedEventHandler PropertyChanged;
         PipelinesContext db;
         MainWindow OwnerWin;
+        public static PointLatLng DefaultPoint = new PointLatLng(55.755812, 37.617820);
 
         private bool autoSaveSensorState = false;
         private bool autoPositionCenter = false;
@@ -49,7 +50,6 @@ namespace GpsMapRoutes
             SelectedSensor.Lng = Lng;
             SelectedSensor.Information = CurrentSensorInformation;
         }
-
 
         #region commands
 
@@ -383,7 +383,7 @@ namespace GpsMapRoutes
 
             if (p is null)
             {
-                GMapMarker marker = new GMapMarker(new PointLatLng(55.755812, 37.617820));
+                GMapMarker marker = new GMapMarker(DefaultPoint);
                 marker.ZIndex = 55;
                 marker.Shape = new CustomMarkerDemo(OwnerWin, marker, "Данные отсутствуют");
                 OwnerWin.MainMap.Markers.Add(marker);
@@ -394,7 +394,7 @@ namespace GpsMapRoutes
 
             if (p.Sensors.Count == 0)
             {
-                GMapMarker marker = new GMapMarker(new PointLatLng(55.755812, 37.617820));
+                GMapMarker marker = new GMapMarker(DefaultPoint);
                 marker.ZIndex = 55;
                 marker.Shape = new CustomMarkerDemo(OwnerWin, marker, "Данные отсутствуют");
                 OwnerWin.MainMap.Markers.Add(marker);
