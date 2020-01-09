@@ -23,5 +23,10 @@ namespace GpsMapRoutes
         {
             InitializeComponent();
         }
+
+        private void Accept_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
