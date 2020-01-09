@@ -193,21 +193,15 @@ namespace GpsMapRoutes
                       SensorModel selectedSenderSensor = obj as SensorModel;
                       if (selectedSensor is null)
                           return;
-                      
+
                       SensorWindow sensorEditWindow = new SensorWindow();
                       sensorEditWindow.DataContext = this;
                       Lat = selectedSenderSensor.Lat;
                       Lng = selectedSenderSensor.Lng;
                       CurrentSensorInformation = selectedSenderSensor.Information;
+
                       autoSaveSensorState = true;
-                      if (sensorEditWindow.ShowDialog() == true)
-                      {
-
-                      }
-                      else
-                      {
-
-                      }
+                      sensorEditWindow.ShowDialog();
                       autoSaveSensorState = false;
                       Lat = 0;
                       Lng = 0;
