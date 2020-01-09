@@ -10,6 +10,9 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using GMap.NET;
+using GMap.NET.WindowsPresentation;
+using GpsMapRoutes.CustomMarkers;
 using GpsMapRoutes.models;
 using GpsMapRoutes.service;
 using GpsMapRoutes.service.commands;
@@ -20,12 +23,27 @@ namespace GpsMapRoutes
     {
         public event PropertyChangedEventHandler PropertyChanged;
         PipelinesContext db;
+        MainWindow OwnerWin;
 
         private bool autoSaveSensorState = false;
+        private bool autoPositionCenter = false;
+
         private void SaveSensorState()
         {
-            if (!autoSaveSensorState || SelectedSensor is null)
+            if (SelectedSensor is null)
+            {
                 return;
+            }
+
+            if (autoPositionCenter)
+            {
+                OwnerWin.MainMap.Position = new PointLatLng(Lat, Lng);
+            }
+
+            if (!autoSaveSensorState)
+            {
+                return;
+            }
 
             SelectedSensor.Lat = Lat;
             SelectedSensor.Lng = Lng;
@@ -193,6 +211,7 @@ namespace GpsMapRoutes
                       SensorModel selectedSenderSensor = obj as SensorModel;
                       if (selectedSensor is null)
                           return;
+                      OwnerWin.MainMap.Position = new PointLatLng(selectedSensor.Lat, selectedSensor.Lng);
 
                       SensorWindow sensorEditWindow = new SensorWindow();
                       sensorEditWindow.DataContext = this;
@@ -201,8 +220,11 @@ namespace GpsMapRoutes
                       CurrentSensorInformation = selectedSenderSensor.Information;
 
                       autoSaveSensorState = true;
+                      autoPositionCenter = true;
                       sensorEditWindow.ShowDialog();
+                      autoPositionCenter = false;
                       autoSaveSensorState = false;
+
                       Lat = 0;
                       Lng = 0;
                       CurrentSensorInformation = string.Empty;
@@ -242,13 +264,17 @@ namespace GpsMapRoutes
                 Lat = 0;
                 Lng = 0;
                 PipeName = value?.Information;
-                _ = IsPipelineSelected;
+
                 OnPropertyChanged(nameof(SelectedPipeline));
+                // формируем свежий список точек
                 OnPropertyChanged(nameof(CurrentSensors));
+                ReloadPipe();
             }
         }
 
         private bool isPipelineSelected = false;
+        // Используется для контроля доступности (вкл/выкл) контрола Expander.
+        // Для включения и отключения доступности любого контрола (с зависимостью выбран ли сейчас какой-либо трубопровод)
         public bool IsPipelineSelected
         {
             get
@@ -325,6 +351,17 @@ namespace GpsMapRoutes
             }
         }
 
+        private PointLatLng currentMapPoint;
+        public PointLatLng CurrentMapPoint
+        {
+            get => currentMapPoint;
+            set
+            {
+                currentMapPoint = value;
+                OnPropertyChanged(nameof(CurrentMapPoint));
+            }
+        }
+
         private string status;
         public string Status
         {
@@ -339,19 +376,54 @@ namespace GpsMapRoutes
 
         void ReloadPipe()
         {
-            PipelineModel pipe = SelectedPipeline;
-            SelectedPipeline = null;
-            SelectedPipeline = pipe;
+            OnPropertyChanged(nameof(IsPipelineSelected));
+
+            PipelineModel p = SelectedPipeline;
+            OwnerWin.MainMap.Markers.Clear();
+
+            if (p is null)
+            {
+                GMapMarker marker = new GMapMarker(new PointLatLng(55.755812, 37.617820));
+                marker.ZIndex = 55;
+                marker.Shape = new CustomMarkerDemo(OwnerWin, marker, "Данные отсутствуют");
+                OwnerWin.MainMap.Markers.Add(marker);
+
+                OwnerWin.MainMap.ZoomAndCenterMarkers(null);
+                return;
+            }
+
+            if (p.Sensors.Count == 0)
+            {
+                GMapMarker marker = new GMapMarker(new PointLatLng(55.755812, 37.617820));
+                marker.ZIndex = 55;
+                marker.Shape = new CustomMarkerDemo(OwnerWin, marker, "Данные отсутствуют");
+                OwnerWin.MainMap.Markers.Add(marker);
+
+                OwnerWin.MainMap.ZoomAndCenterMarkers(null);
+            }
+            else
+            {
+                GMapRoute mRoute = new GMapRoute(p.Sensors.OrderByDescending(x => x.OrderIndex).Select(x => new PointLatLng(x.Lat, x.Lng)));
+                {
+                    mRoute.ZIndex = -1;
+                }
+
+                OwnerWin.MainMap.Markers.Add(mRoute);
+
+                OwnerWin.MainMap.ZoomAndCenterMarkers(null);
+            }
         }
 
-        public ApplicationViewModel()
+        public ApplicationViewModel(MainWindow setWin)
         {
             db = new PipelinesContext();
             db.Pipelines.Include(x => x.Sensors).Load();
             Pipelines = db.Pipelines.Local;
+            OwnerWin = setWin;
+            OwnerWin.MainMap.OnPositionChanged += MainMap_OnPositionChanged;
         }
 
-        public void MainMap_OnPositionChanged(GMap.NET.PointLatLng point)
+        public void MainMap_OnPositionChanged(PointLatLng point)
         {
             Status = point.Lat.ToString(CultureInfo.InvariantCulture) + ", " + point.Lng.ToString(CultureInfo.InvariantCulture);
         }

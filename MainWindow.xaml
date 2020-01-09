@@ -28,7 +28,7 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*" MinHeight="20" MaxHeight="68"></RowDefinition>
             </Grid.RowDefinitions>
-            <ListBox Grid.Row="0" Name="PipelinesList" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Pipelines}" SelectedItem="{Binding SelectedPipeline}" SelectionChanged="PipelinesList_SelectionChanged">
+            <ListBox Grid.Row="0" Name="PipelinesList" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Pipelines}" SelectedItem="{Binding SelectedPipeline}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Information}" />
@@ -129,7 +129,7 @@
             <local:Map Grid.Row="1" x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
             <TextBox IsReadOnly="True" Grid.Row="2" Background="LightGray">
                 <TextBox.Text>
-                    <Binding Path="Status" NotifyOnValidationError="True"/>
+                    <Binding Path="Status"/><!---->
                 </TextBox.Text>
             </TextBox>
         </Grid>
