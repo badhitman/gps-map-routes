@@ -7,21 +7,32 @@ namespace GpsMapRoutes
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ApplicationViewModel ownerWin;
-        public ApplicationViewModel OwnerWin
+        private ApplicationViewModel owner;
+        public ApplicationViewModel Owner
         {
-            get=> ownerWin;
+            get => owner;
             set
             {
-                ownerWin = value;
-                OnPropertyChanged(nameof(OwnerWin));
+                owner = value;
+                OnPropertyChanged(nameof(Owner));
             }
 
         }
 
-        public ApplicationSensorViewModel(ApplicationViewModel setOwnerWin)
+        protected double adjustment;
+        public double Adjustment
         {
-            OwnerWin = setOwnerWin;
+            get => adjustment;
+            set
+            {
+                adjustment = value;
+                OnPropertyChanged(nameof(Adjustment));
+            }
+        }
+
+        public ApplicationSensorViewModel(ApplicationViewModel setOwner)
+        {
+            Owner = setOwner;
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")
