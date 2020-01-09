@@ -38,7 +38,7 @@ namespace GpsMapRoutes.models
             set
             {
                 distance = value;
-                OnPropertyChanged(nameof(Lat));
+                OnPropertyChanged(nameof(Distance));
             }
         }
 

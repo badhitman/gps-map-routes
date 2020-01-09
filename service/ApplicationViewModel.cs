@@ -48,7 +48,7 @@ namespace GpsMapRoutes
 
             SelectedSensor.Lat = Lat;
             SelectedSensor.Lng = Lng;
-            SelectedSensor.Information = CurrentSensorInformation;
+            SelectedSensor.Distance = CurrentSensorDistance;
         }
 
         #region commands
@@ -101,7 +101,7 @@ namespace GpsMapRoutes
 
                       SensorModel s = new SensorModel(Lat, Lng, SelectedPipeline.Id)
                       {
-                          Information = CurrentSensorInformation,
+                          Distance = CurrentSensorDistance,
                           OrderIndex = db.Sensors.Any(x => x.PipelineId == currentPiplineId) ? db.Sensors.Where(x => x.PipelineId == currentPiplineId).Max(x => x.OrderIndex) + 1 : 1
                       };
 
@@ -109,7 +109,7 @@ namespace GpsMapRoutes
                       db.SaveChanges();
                       Lat = 0;
                       Lng = 0;
-                      CurrentSensorInformation = "";
+                      CurrentSensorDistance = 0;
                       ReloadPipe();
                   },
                 (obj) => !(SelectedPipeline is null)));
@@ -217,7 +217,7 @@ namespace GpsMapRoutes
                       sensorEditWindow.DataContext = this;
                       Lat = selectedSenderSensor.Lat;
                       Lng = selectedSenderSensor.Lng;
-                      CurrentSensorInformation = selectedSenderSensor.Information;
+                      CurrentSensorDistance = selectedSenderSensor.Distance;
 
                       autoSaveSensorState = true;
                       autoPositionCenter = true;
@@ -227,7 +227,7 @@ namespace GpsMapRoutes
 
                       Lat = 0;
                       Lng = 0;
-                      CurrentSensorInformation = string.Empty;
+                      CurrentSensorDistance = 0;
                   },
                 (obj) => !(SelectedSensor is null)));
             }
@@ -328,14 +328,14 @@ namespace GpsMapRoutes
             }
         }
 
-        private string currentSensorInformation;
-        public string CurrentSensorInformation
+        private double currentSensorDistance;
+        public double CurrentSensorDistance
         {
-            get => currentSensorInformation;
+            get => currentSensorDistance;
             set
             {
-                currentSensorInformation = value;
-                OnPropertyChanged(nameof(CurrentSensorInformation));
+                currentSensorDistance = value;
+                OnPropertyChanged(nameof(CurrentSensorDistance));
                 SaveSensorState();
             }
         }
@@ -380,7 +380,7 @@ namespace GpsMapRoutes
 
             PipelineModel p = SelectedPipeline;
             OwnerWin.MainMap.Markers.Clear();
-
+            OnPropertyChanged(nameof(CurrentSensors));
             if (p is null)
             {
                 GMapMarker marker = new GMapMarker(DefaultPoint);

@@ -41,7 +41,7 @@
         <GroupBox Header="Описание локации" Grid.Row="1">
             <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap">
                 <TextBox.Text>
-                    <Binding Path="CurrentSensorInformation" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="CurrentSensorDistance" UpdateSourceTrigger="PropertyChanged"/>
                 </TextBox.Text>
             </TextBox>
         </GroupBox>

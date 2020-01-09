@@ -63,8 +63,8 @@
                     <GroupBox BorderThickness="0 1" Header="Управление датчиками">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <GroupBox Header="Координаты lat/lng" Grid.Column="0">
@@ -93,10 +93,14 @@
                                     </TextBox>
                                 </Grid>
                             </GroupBox>
-                            <GroupBox Header="Локация (опционально)" Grid.Column="1">
+                            <GroupBox Header="Дистанция" Grid.Column="1">
                                 <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap">
                                     <TextBox.Text>
-                                        <Binding Path="CurrentSensorInformation" UpdateSourceTrigger="PropertyChanged"/>
+                                        <Binding Path="CurrentSensorDistance" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <local:NumberValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
                                     </TextBox.Text>
                                 </TextBox>
                             </GroupBox>
@@ -120,7 +124,7 @@
                             <GridView>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Lat}" Width="100">Lat</GridViewColumn>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Lng}" Width="100">Lng</GridViewColumn>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Information}" Width="200">Локация</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Distance}" Width="200">Дистанция</GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -129,7 +133,7 @@
             <local:Map Grid.Row="1" x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
             <TextBox IsReadOnly="True" Grid.Row="2" Background="LightGray">
                 <TextBox.Text>
-                    <Binding Path="Status"/><!---->
+                    <Binding Path="Status"/>
                 </TextBox.Text>
             </TextBox>
         </Grid>
