@@ -1,4 +1,8 @@
-﻿using System.ComponentModel;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
@@ -12,7 +16,7 @@ namespace GpsMapRoutes.models
         private int orderIndex;
         public int OrderIndex
         {
-            get=> orderIndex;
+            get => orderIndex;
             set
             {
                 orderIndex = value;
@@ -40,19 +44,6 @@ namespace GpsMapRoutes.models
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        #region StripedRowBackground
-        private static bool StripedRowBackgroundToggler = true;
-        public string StripedRowBackground
-        {
-            get
-            {
-                StripedRowBackgroundToggler = !StripedRowBackgroundToggler;
-
-                return StripedRowBackgroundToggler ? "LightGray" : "";
-            }
-        }
-        #endregion
-                
         /*public override bool Equals(object other)
         {
             if (Id == 0 || other is null || other.GetType() != this.GetType())

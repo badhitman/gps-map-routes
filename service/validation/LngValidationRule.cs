@@ -1,4 +1,8 @@
-﻿using System.Globalization;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using System.Globalization;
 using System.Windows.Controls;
 
 namespace GpsMapRoutes

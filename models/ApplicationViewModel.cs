@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using GpsMapRoutes.service;
 using GpsMapRoutes.service.commands;
 
@@ -173,7 +176,7 @@ namespace GpsMapRoutes.models
                 return openSensorCommand ??
                   (openSensorCommand = new RelayCommand(obj =>
                   {
-                      
+
                   },
                 (obj) => !(SelectedSensor is null)));
             }

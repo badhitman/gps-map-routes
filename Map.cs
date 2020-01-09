@@ -1,8 +1,6 @@
-﻿using System.Windows.Controls;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using GMap.NET.WindowsPresentation;
 using System.Globalization;
-using System.Windows.Forms;
 using System.Windows;
 using System;
 

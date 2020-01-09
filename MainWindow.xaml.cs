@@ -1,21 +1,13 @@
-﻿using GMap.NET;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using GpsMapRoutes.CustomMarkers;
 using GpsMapRoutes.models;
 
@@ -32,7 +24,6 @@ namespace GpsMapRoutes
             DataContext = new ApplicationViewModel();
             MainMap.OnPositionChanged += (DataContext as ApplicationViewModel).MainMap_OnPositionChanged;
             MainMap.MapProvider = GMapProviders.YandexMap;
-            
         }
 
         private void PipelinesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -62,7 +53,7 @@ namespace GpsMapRoutes
             }
             else
             {
-                GMapRoute mRoute = new GMapRoute(p.Sensors.OrderByDescending(x=>x.OrderIndex).Select(x => new PointLatLng(x.Lat, x.Lng)));
+                GMapRoute mRoute = new GMapRoute(p.Sensors.OrderByDescending(x => x.OrderIndex).Select(x => new PointLatLng(x.Lat, x.Lng)));
                 {
                     mRoute.ZIndex = -1;
                 }

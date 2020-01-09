@@ -1,4 +1,8 @@
-﻿using System.Data.Entity;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using System.Data.Entity;
 using GpsMapRoutes.models;
 
 namespace GpsMapRoutes.service

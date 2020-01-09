@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using System.Collections.Generic;
 
 namespace GpsMapRoutes.models
 {
