@@ -93,7 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Map.cs" />
-    <Compile Include="models\ApplicationViewModel.cs" />
+    <Compile Include="service\ApplicationViewModel.cs" />
     <Compile Include="models\AbstractModel.cs" />
     <Compile Include="models\PipelineModel.cs" />
     <Compile Include="SensorWindow.xaml.cs">

@@ -25,7 +25,6 @@ namespace GpsMapRoutes.models
         }
 
         private string information;
-        [ConcurrencyCheck]
         public string Information
         {
             get { return information; }

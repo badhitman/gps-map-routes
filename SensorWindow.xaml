@@ -5,26 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GpsMapRoutes"
         mc:Ignorable="d"
-        Title="SensorWindow" ResizeMode="NoResize" Height="226.184" Width="480">
+        Title="Point edit" MinHeight="200" Height="250" MinWidth="250" Width="480">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="80" />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Header="Координаты" Grid.Row="0">
-
+        <GroupBox Header="Координаты lat/lng" Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                    <TextBox.Text>
+                        <Binding Path="Lat" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <local:LatValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox Grid.Column="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                    <TextBox.Text>
+                        <Binding Path="Lng" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <local:LngValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </Grid>
         </GroupBox>
-        <GroupBox Header="Описание" Grid.Row="1">
-
+        <GroupBox Header="Описание локации (опционально)" Grid.Row="1">
+            <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                <TextBox.Text>
+                    <Binding Path="CurrentSensorInformation"/>
+                </TextBox.Text>
+            </TextBox>
         </GroupBox>
-        <GroupBox Header="Перспектива" Grid.Row="2">
-
+        <GroupBox BorderThickness="0,1" Header="Перспективы" Grid.Row="2">
+            <Grid>
+                
+            </Grid>
         </GroupBox>
-        <StackPanel HorizontalAlignment="Right" Grid.Row="3" Height="auto" Orientation="Horizontal" Margin="0,5,0,0">
-            <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="0,0,10,0">OK</Button>
-            <Button IsCancel="True" MinWidth="60">Отмена</Button>
-        </StackPanel>
     </Grid>
 </Window>

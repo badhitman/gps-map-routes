@@ -9,15 +9,29 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using GpsMapRoutes.models;
 using GpsMapRoutes.service;
 using GpsMapRoutes.service.commands;
 
-namespace GpsMapRoutes.models
+namespace GpsMapRoutes
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         PipelinesContext db;
+
+        private bool autoSaveSensorState = false;
+        private void SaveSensorState()
+        {
+            if (!autoSaveSensorState || SelectedSensor is null)
+                return;
+
+            SelectedSensor.Lat = Lat;
+            SelectedSensor.Lng = Lng;
+            SelectedSensor.Information = CurrentSensorInformation;
+        }
+
 
         #region commands
 
@@ -176,7 +190,28 @@ namespace GpsMapRoutes.models
                 return openSensorCommand ??
                   (openSensorCommand = new RelayCommand(obj =>
                   {
+                      SensorModel selectedSenderSensor = obj as SensorModel;
+                      if (selectedSensor is null)
+                          return;
+                      
+                      SensorWindow sensorEditWindow = new SensorWindow();
+                      sensorEditWindow.DataContext = this;
+                      Lat = selectedSenderSensor.Lat;
+                      Lng = selectedSenderSensor.Lng;
+                      CurrentSensorInformation = selectedSenderSensor.Information;
+                      autoSaveSensorState = true;
+                      if (sensorEditWindow.ShowDialog() == true)
+                      {
 
+                      }
+                      else
+                      {
+
+                      }
+                      autoSaveSensorState = false;
+                      Lat = 0;
+                      Lng = 0;
+                      CurrentSensorInformation = string.Empty;
                   },
                 (obj) => !(SelectedSensor is null)));
             }
@@ -257,6 +292,7 @@ namespace GpsMapRoutes.models
             {
                 lat = value;
                 OnPropertyChanged(nameof(Lat));
+                SaveSensorState();
             }
         }
 
@@ -268,6 +304,7 @@ namespace GpsMapRoutes.models
             {
                 lng = value;
                 OnPropertyChanged(nameof(Lng));
+                SaveSensorState();
             }
         }
 
@@ -279,6 +316,7 @@ namespace GpsMapRoutes.models
             {
                 currentSensorInformation = value;
                 OnPropertyChanged(nameof(CurrentSensorInformation));
+                SaveSensorState();
             }
         }
 
