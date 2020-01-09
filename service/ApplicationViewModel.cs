@@ -9,7 +9,6 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using GMap.NET;
 using GMap.NET.WindowsPresentation;
 using GpsMapRoutes.CustomMarkers;
@@ -212,10 +211,11 @@ namespace GpsMapRoutes
                       SensorModel selectedSenderSensor = obj as SensorModel;
                       if (selectedSensor is null)
                           return;
+
                       OwnerWin.MainMap.Position = new PointLatLng(selectedSensor.Lat, selectedSensor.Lng);
 
                       SensorWindow sensorEditWindow = new SensorWindow();
-                      sensorEditWindow.DataContext = this;
+                      sensorEditWindow.DataContext = new ApplicationSensorViewModel(this);
                       Lat = selectedSenderSensor.Lat;
                       Lng = selectedSenderSensor.Lng;
                       CurrentSensorDistance = selectedSenderSensor.Distance;
@@ -257,7 +257,7 @@ namespace GpsMapRoutes
                     {
                         OwnerWin.sensorsList.SelectedItem = OwnerWin.sensorsList.Items[SelectedPipeline.Sensors.FindIndex(x => x.Id == sensorId)];
                     }
-                }               
+                }
 
                 return currentSensors;
             }

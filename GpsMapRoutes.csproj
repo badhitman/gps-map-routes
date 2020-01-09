@@ -185,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Map.cs" />
+    <Compile Include="service\ApplicationSensorViewModel.cs" />
     <Compile Include="service\ApplicationViewModel.cs" />
     <Compile Include="models\AbstractModel.cs" />
     <Compile Include="models\PipelineModel.cs" />

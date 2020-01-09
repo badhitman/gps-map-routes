@@ -25,7 +25,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBox  Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
                         <TextBox.Text>
-                            <Binding Path="Lat" StringFormat="N12"  NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                            <Binding Path="OwnerWin.Lat" StringFormat="N12"  NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
                                     <local:LatValidationRule/>
                                 </Binding.ValidationRules>
@@ -34,7 +34,7 @@
                     </TextBox>
                     <TextBox Grid.Column="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
                         <TextBox.Text>
-                            <Binding Path="Lng" StringFormat="N12" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                            <Binding Path="OwnerWin.Lng" StringFormat="N12" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
                                     <local:LngValidationRule/>
                                 </Binding.ValidationRules>
@@ -46,7 +46,7 @@
             <GroupBox Header="Дистанция" Grid.Column="1">
                 <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap">
                     <TextBox.Text>
-                        <Binding Path="CurrentSensorDistance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="OwnerWin.CurrentSensorDistance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged"/>
                     </TextBox.Text>
                 </TextBox>
             </GroupBox>
