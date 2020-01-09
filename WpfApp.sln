@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1.csproj", "{29332E05-EA16-46A2-BC6C-7EFD4B391D11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp.csproj", "{29332E05-EA16-46A2-BC6C-7EFD4B391D11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMap.NET.Core", "..\greatmaps\GMap.NET.Core\GMap.NET.Core.csproj", "{D0C39D9D-BED0-418B-9A5E-713176CAF40C}"
 EndProject

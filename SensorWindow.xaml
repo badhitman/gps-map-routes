@@ -1,0 +1,25 @@
+﻿<Window x:Class="WpfApp.SensorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp"
+        mc:Ignorable="d"
+        Title="SensorWindow" ResizeMode="NoResize" Height="200" Width="480">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="80" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Координаты" Grid.Row="0">
+
+        </GroupBox>
+        <GroupBox Header="Описание" Grid.Row="1">
+
+        </GroupBox>
+        <GroupBox Header="Перспектива" Grid.Row="2">
+
+        </GroupBox>
+    </Grid>
+</Window>

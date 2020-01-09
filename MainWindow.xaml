@@ -1,12 +1,137 @@
-﻿<Window x:Class="WpfApp1.MainWindow"
+﻿<Window x:Class="WpfApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp1"
+        xmlns:local="clr-namespace:WpfApp"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" MinHeight="250" Height="450" MinWidth="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MaxWidth="150" MinWidth="100" Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*" MinHeight="20" MaxHeight="68"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListBox Grid.Row="0" Name="PipelinesList" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Pipelines}" SelectedItem="{Binding SelectedPipeline}" SelectionChanged="PipelinesList_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Information}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel VerticalAlignment="Bottom" Grid.Row="1">
+                <Button Command="{Binding AddPipelineCommand}" Content="Новый трубопровод" Margin="0 0 0 1" Foreground="#FF00124D"></Button>
+                <Button Command="{Binding DelPipelineCommand}" CommandParameter="{Binding SelectedPipeline}" Content="Удалить" Foreground="#FFA00000"></Button>
+            </StackPanel>
+        </Grid>
+        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Expander IsEnabled="{Binding IsPipelineSelected}" Header="{Binding SelectedPipeline.Title}" MaxHeight="450" Grid.Row="0" HorizontalAlignment="Stretch" IsExpanded="False">
+                <StackPanel Background="#FFE5E5E5">
+                    <GroupBox Header="Наименование трубопровода" BorderThickness="0">
+                        <TextBox HorizontalAlignment="Stretch" Height="23" TextWrapping="Wrap">
+                            <TextBox.Text>
+                                <Binding Path="PipeName" NotifyOnValidationError="True">
+                                    <Binding.ValidationRules>
+                                        <local:PipelineNameValidationRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </GroupBox>
+                    <GroupBox BorderThickness="0 1" Header="Управление датчиками">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Header="Координаты lat/lng" Grid.Column="0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                                        <TextBox.Text>
+                                            <Binding Path="Lat" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <local:LatValidationRule/>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                    <TextBox Grid.Column="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                                        <TextBox.Text>
+                                            <Binding Path="Lng" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <local:LngValidationRule/>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Локация" Grid.Column="1">
+                                <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                                    <TextBox.Text>
+                                        <Binding Path="CurrentSensorInformation"/>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </GroupBox>
+                            <Button Command="{Binding AddSensorCommand}" Margin="0 10 0 0" Grid.Column="2" Content="  add  "/>
+                        </Grid>
+                    </GroupBox>
+                    <ListView MinHeight="42" MaxHeight="200" Name="sensorsList" ItemsSource="{Binding CurrentSensors}" SelectedItem="{Binding SelectedSensor}" SelectionMode="Single">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding OpenSensorCommand}" CommandParameter="{Binding SelectedSensor}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Up" Command="{Binding UpSensorCommand}" CommandParameter="{Binding SelectedSensor}" />
+                                <MenuItem Header="Down" Command="{Binding DownSensorCommand}" CommandParameter="{Binding SelectedSensor}" />
+                                <MenuItem Header="Remove" Command="{Binding RemoveSensorCommand}" CommandParameter="{Binding SelectedSensor}" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Lat}" Width="100">Lat</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Lng}" Width="100">Lng</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Information}" Width="200">Локация</GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+            </Expander>
+            <local:Map Grid.Row="1" x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
+            <TextBox IsReadOnly="True" Grid.Row="2" Background="LightGray">
+                <TextBox.Text>
+                    <Binding Path="Status" NotifyOnValidationError="True"/>
+                </TextBox.Text>
+            </TextBox>
+        </Grid>
     </Grid>
 </Window>
