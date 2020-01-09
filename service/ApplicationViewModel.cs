@@ -36,11 +36,6 @@ namespace GpsMapRoutes
                 return;
             }
 
-            if (autoPositionCenter)
-            {
-                OwnerWin.MainMap.Position = new PointLatLng(Lat, Lng);
-            }
-
             if (!autoSaveSensorState)
             {
                 return;
@@ -49,6 +44,12 @@ namespace GpsMapRoutes
             SelectedSensor.Lat = Lat;
             SelectedSensor.Lng = Lng;
             SelectedSensor.Distance = CurrentSensorDistance;
+            ReloadPipe();
+
+            if (autoPositionCenter)
+            {
+                OwnerWin.MainMap.Position = new PointLatLng(Lat, Lng);
+            }
         }
 
         #region commands
@@ -244,9 +245,19 @@ namespace GpsMapRoutes
         {
             get
             {
+                int? sensorId = SelectedSensor?.Id;
+
                 currentSensors.Clear();
                 if (!(SelectedPipeline is null))
-                    SelectedPipeline.Sensors.OrderByDescending(x => x.OrderIndex).ToList().ForEach(x => currentSensors.Add(x));
+                {
+                    SelectedPipeline.Sensors = SelectedPipeline.Sensors.OrderByDescending(x => x.OrderIndex).ToList();
+                    SelectedPipeline.Sensors.ForEach(x => currentSensors.Add(x));
+
+                    if (sensorId != null)
+                    {
+                        OwnerWin.sensorsList.SelectedItem = OwnerWin.sensorsList.Items[SelectedPipeline.Sensors.FindIndex(x => x.Id == sensorId)];
+                    }
+                }               
 
                 return currentSensors;
             }
@@ -273,8 +284,10 @@ namespace GpsMapRoutes
         }
 
         private bool isPipelineSelected = false;
-        // Используется для контроля доступности (вкл/выкл) контрола Expander.
-        // Для включения и отключения доступности любого контрола (с зависимостью выбран ли сейчас какой-либо трубопровод)
+        /// <summary>
+        /// Используется для контроля доступности (вкл/выкл) контрола Expander.
+        /// Для включения и отключения доступности любого контрола (с зависимостью выбран ли сейчас какой-либо трубопровод)
+        /// </summary>
         public bool IsPipelineSelected
         {
             get
