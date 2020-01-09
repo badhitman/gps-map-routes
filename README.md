@@ -1,7 +1,7 @@
 # pipeline map routes
 Wpf mvvm map app
 
-–исование на картах при помощи координат
+Рисование на картах при помощи координат
 
 ![pipeline routes 1](./demo/pipeline-route-demo.jpg)
 
