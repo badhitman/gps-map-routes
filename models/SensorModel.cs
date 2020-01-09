@@ -30,5 +30,17 @@ namespace GpsMapRoutes.models
             get => lng;
             set { lng = value; OnPropertyChanged(nameof(Lng)); }
         }
+
+        private double distance;
+        public double Distance
+        {
+            get=> distance;
+            set
+            {
+                distance = value;
+                OnPropertyChanged(nameof(Lat));
+            }
+        }
+
     }
 }
