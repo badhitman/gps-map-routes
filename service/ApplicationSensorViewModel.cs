@@ -64,20 +64,23 @@ namespace GpsMapRoutes
             Owner = setOwner;
             Adjustment = SelectedPositionDistance;
 
-            string cal_info = "Собрать информацию и вывести сюда";
+            string cal_info = string.Empty;
 
             if (PrewSensor is null && NextSensor is null)
             {
-                cal_info = "Предыдущих или следующих точек не обнаружено";
+                cal_info += "Предыдущих или следующих точек не обнаружено";
             }
             else if (!(PrewSensor is null) && !(NextSensor is null))
             {
                 var sCoord = new GeoCoordinate(PrewSensor.Lat, PrewSensor.Lng);
                 var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
-                cal_info = "от предыдущей ≈ " + Math.Round(sCoord.GetDistanceTo(eCoord), 2) + " метров.";
+                cal_info += "от предыдущей ≈ " + Math.Round(sCoord.GetDistanceTo(eCoord), 2) + " метров.";
+                cal_info += "\nрасчётная дистанция ≈ "+ Math.Round(PrewSensor.Distance + sCoord.GetDistanceTo(eCoord), 2) + " м.\n";
 
                 sCoord = new GeoCoordinate(NextSensor.Lat, NextSensor.Lng);
                 cal_info += "\nдо следующей ≈ " + Math.Round(sCoord.GetDistanceTo(eCoord), 2) + " метров.";
+                cal_info += "\nрасчётная дистанция ≈ " + Math.Round(NextSensor.Distance - sCoord.GetDistanceTo(eCoord), 2) + " м.\n";
+                cal_info += "\n\n";
             }
             else if (PrewSensor is null)
             {
@@ -89,7 +92,7 @@ namespace GpsMapRoutes
             {
                 var sCoord = new GeoCoordinate(PrewSensor.Lat, PrewSensor.Lng);
                 var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
-                cal_info = "от предыдущей ≈ " + sCoord.GetDistanceTo(eCoord) + " метров.";
+                cal_info += "от предыдущей ≈ " + sCoord.GetDistanceTo(eCoord) + " метров.";
             }
 
             CalculationInfo = cal_info;

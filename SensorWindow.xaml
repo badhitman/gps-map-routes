@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GpsMapRoutes"
         mc:Ignorable="d"
-        Title="Point edit" MinHeight="350" Height="350" MinWidth="250" Width="480">
+        Title="Point edit" MinHeight="350" Height="500" MinWidth="250" Width="480">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
@@ -57,7 +57,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="60" />
+                    <RowDefinition Height="120" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Margin="0,3">
                     <Grid.ColumnDefinitions>
@@ -89,7 +89,7 @@
                         <TextBlock HorizontalAlignment="Right" Grid.Column="2" Text="{Binding NextSensorDistance}"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="3" Header="Расчётные данные">
+                <GroupBox Grid.Row="3" Header="Прогнозы">
                     <TextBox Background="LightGray" IsReadOnly="True"  Grid.Row="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch">
                         <TextBox.Text>
                             <Binding Path="CalculationInfo" UpdateSourceTrigger="PropertyChanged"/>
