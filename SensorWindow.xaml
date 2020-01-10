@@ -23,7 +23,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox  Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                    <TextBox  Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="TextBox_TextChanged">
                         <TextBox.Text>
                             <Binding Path="Owner.Lat" StringFormat="N12"  NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
@@ -32,7 +32,7 @@
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
-                    <TextBox Grid.Column="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                    <TextBox Grid.Column="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="TextBox_TextChanged">
                         <TextBox.Text>
                             <Binding Path="Owner.Lng" StringFormat="N12" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
@@ -44,7 +44,7 @@
                 </Grid>
             </GroupBox>
             <GroupBox Header="Дистанция" Grid.Column="1">
-                <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap" TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
                         <Binding Path="Owner.CurrentSensorDistance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged"/>
                     </TextBox.Text>
@@ -89,12 +89,8 @@
                         <TextBlock HorizontalAlignment="Right" Grid.Column="2" Text="{Binding NextSensorDistance}"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="3" Header="Прогнозы">
-                    <TextBox Background="LightGray" IsReadOnly="True"  Grid.Row="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch">
-                        <TextBox.Text>
-                            <Binding Path="CalculationInfo" UpdateSourceTrigger="PropertyChanged"/>
-                        </TextBox.Text>
-                    </TextBox>
+                <GroupBox Grid.Row="3" Header="Перспективы">
+                    <TextBox Text="{Binding CalculationInfo, Mode=OneWay}" Background="LightGray" IsReadOnly="True"  Grid.Row="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
                 </GroupBox>
             </Grid>
         </GroupBox>

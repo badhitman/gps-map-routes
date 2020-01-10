@@ -215,11 +215,11 @@ namespace GpsMapRoutes
                       OwnerWin.MainMap.Position = new PointLatLng(selectedSensor.Lat, selectedSensor.Lng);
 
                       SensorWindow sensorEditWindow = new SensorWindow(new ApplicationSensorViewModel(this));
-                      
+
                       Lat = selectedSenderSensor.Lat;
                       Lng = selectedSenderSensor.Lng;
                       CurrentSensorDistance = selectedSenderSensor.Distance;
-                      
+
                       autoSaveSensorState = true;
                       autoPositionCenter = true;
                       sensorEditWindow.ShowDialog();
