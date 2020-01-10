@@ -22,7 +22,7 @@ namespace GpsMapRoutes
     {
         public event PropertyChangedEventHandler PropertyChanged;
         PipelinesContext db;
-        MainWindow OwnerWin;
+        public MainWindow OwnerWin { get; }
         public static PointLatLng DefaultPoint = new PointLatLng(55.755812, 37.617820);
 
         private bool autoSaveSensorState = false;
@@ -214,12 +214,12 @@ namespace GpsMapRoutes
 
                       OwnerWin.MainMap.Position = new PointLatLng(selectedSensor.Lat, selectedSensor.Lng);
 
-                      SensorWindow sensorEditWindow = new SensorWindow();
-                      sensorEditWindow.DataContext = new ApplicationSensorViewModel(this);
+                      SensorWindow sensorEditWindow = new SensorWindow(new ApplicationSensorViewModel(this));
+                      
                       Lat = selectedSenderSensor.Lat;
                       Lng = selectedSenderSensor.Lng;
                       CurrentSensorDistance = selectedSenderSensor.Distance;
-
+                      
                       autoSaveSensorState = true;
                       autoPositionCenter = true;
                       sensorEditWindow.ShowDialog();
@@ -240,23 +240,23 @@ namespace GpsMapRoutes
         #region collections
         public ObservableCollection<PipelineModel> Pipelines { get; set; }
 
-        private ObservableCollection<SensorModel> currentSensors = new ObservableCollection<SensorModel>();
+        /// <summary>
+        /// Отсортированый список (вверху конец маршрута, а внизу начало)
+        /// </summary>
+        public List<SensorModel> CurrentSensorsList => SelectedPipeline?.Sensors?.OrderByDescending(x => x.OrderIndex).ToList() ?? new List<SensorModel>();
+        /// <summary>
+        /// Отсортированый список (вверху конец маршрута, а внизу начало)
+        /// </summary>
         public ObservableCollection<SensorModel> CurrentSensors
         {
             get
             {
-                int? sensorId = SelectedSensor?.Id;
+                int selectedSensorId = SelectedSensor?.Id ?? 0;
 
-                currentSensors.Clear();
-                if (!(SelectedPipeline is null))
+                ObservableCollection<SensorModel> currentSensors = new ObservableCollection<SensorModel>(CurrentSensorsList);
+                if (selectedSensorId > 0)
                 {
-                    SelectedPipeline.Sensors = SelectedPipeline.Sensors.OrderByDescending(x => x.OrderIndex).ToList();
-                    SelectedPipeline.Sensors.ForEach(x => currentSensors.Add(x));
-
-                    if (sensorId != null)
-                    {
-                        OwnerWin.sensorsList.SelectedItem = OwnerWin.sensorsList.Items[SelectedPipeline.Sensors.FindIndex(x => x.Id == sensorId)];
-                    }
+                    OwnerWin.sensorsList.SelectedItem = CurrentSensorsList[CurrentSensorsList.FindIndex(x => x.Id == selectedSensorId)];
                 }
 
                 return currentSensors;
@@ -416,7 +416,7 @@ namespace GpsMapRoutes
             }
             else
             {
-                GMapRoute mRoute = new GMapRoute(p.Sensors.OrderByDescending(x => x.OrderIndex).Select(x => new PointLatLng(x.Lat, x.Lng)));
+                GMapRoute mRoute = new GMapRoute(CurrentSensors.Select(x => new PointLatLng(x.Lat, x.Lng)));
                 {
                     mRoute.ZIndex = -1;
                 }

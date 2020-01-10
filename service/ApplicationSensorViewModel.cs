@@ -1,4 +1,9 @@
-﻿using System.ComponentModel;
+﻿using GpsMapRoutes.models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Device.Location;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace GpsMapRoutes
@@ -6,17 +11,41 @@ namespace GpsMapRoutes
     public class ApplicationSensorViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        public ApplicationViewModel Owner { get; }
 
-        private ApplicationViewModel owner;
-        public ApplicationViewModel Owner
+        public SensorModel PrewSensor => SelectedPositionSensorInList + 1 >= Owner.CurrentSensorsList.Count ? null : Owner.CurrentSensorsList[SelectedPositionSensorInList + 1];
+        public int SelectedSensorId => Owner.SelectedSensor?.Id ?? 0;
+        public int SelectedPositionSensorInList => SelectedSensorId <= 0 ? -1 : Owner.CurrentSensorsList.FindIndex(x => x.Id == SelectedSensorId);
+        public double SelectedPositionDistance => SelectedSensorId <= 0 ? 0 : CurrentSensor.Distance;
+        public SensorModel NextSensor => SelectedPositionSensorInList > 0 ? Owner.CurrentSensorsList[SelectedPositionSensorInList - 1] : null;
+
+        public SensorModel CurrentSensor => Owner.CurrentSensorsList[Owner.CurrentSensorsList.FindIndex(x => x.Id == SelectedSensorId)];
+
+
+        public double MinAdjustment => PrewSensor?.Distance ?? SelectedPositionDistance;
+        public double MaxAdjustment => NextSensor?.Distance ?? SelectedPositionDistance;
+
+        #region структурные заголовки
+        public string PrevSensorTitle => PrewSensor is null || (PrewSensor is null && NextSensor is null) ? "Текущий" : "Предыдущий";
+        public string MidleSensorTitle => PrewSensor is null || NextSensor is null ? "" : "Текущий";
+        public string NextSensorTitle => PrewSensor is null && NextSensor is null ? "" : NextSensor is null ? "Текущий" : "Следующий";
+        #endregion
+
+        #region установленные пользователем Distance
+        public string PrevSensorDistance => PrewSensor is null || (PrewSensor is null && NextSensor is null) ? SelectedPositionDistance.ToString() : PrewSensor.Distance.ToString() + " (-" + (SelectedPositionDistance - PrewSensor.Distance).ToString() + ")";
+        public string MidleSensorDistance => PrewSensor is null || NextSensor is null ? "" : SelectedPositionDistance.ToString();
+        public string NextSensorDistance => PrewSensor is null && NextSensor is null ? "" : NextSensor is null ? SelectedPositionDistance.ToString() : "(+" + (NextSensor.Distance - SelectedPositionDistance) + ") " + NextSensor.Distance.ToString();
+        #endregion
+
+        private string calculationInfo;
+        public string CalculationInfo
         {
-            get => owner;
+            get => calculationInfo;
             set
             {
-                owner = value;
-                OnPropertyChanged(nameof(Owner));
+                calculationInfo = value;
+                OnPropertyChanged(nameof(CalculationInfo));
             }
-
         }
 
         protected double adjustment;
@@ -33,6 +62,37 @@ namespace GpsMapRoutes
         public ApplicationSensorViewModel(ApplicationViewModel setOwner)
         {
             Owner = setOwner;
+            Adjustment = SelectedPositionDistance;
+
+            string cal_info = "Собрать информацию и вывести сюда";
+
+            if (PrewSensor is null && NextSensor is null)
+            {
+                cal_info = "Предыдущих или следующих точек не обнаружено";
+            }
+            else if (!(PrewSensor is null) && !(NextSensor is null))
+            {
+                var sCoord = new GeoCoordinate(PrewSensor.Lat, PrewSensor.Lng);
+                var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
+                cal_info = "от предыдущей ≈ " + Math.Round(sCoord.GetDistanceTo(eCoord), 2) + " метров.";
+
+                sCoord = new GeoCoordinate(NextSensor.Lat, NextSensor.Lng);
+                cal_info += "\nдо следующей ≈ " + Math.Round(sCoord.GetDistanceTo(eCoord), 2) + " метров.";
+            }
+            else if (PrewSensor is null)
+            {
+                var sCoord = new GeoCoordinate(NextSensor.Lat, NextSensor.Lng);
+                var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
+                cal_info += "\nдо следующей ≈ " + sCoord.GetDistanceTo(eCoord) + " метров.";
+            }
+            else if (NextSensor is null)
+            {
+                var sCoord = new GeoCoordinate(PrewSensor.Lat, PrewSensor.Lng);
+                var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
+                cal_info = "от предыдущей ≈ " + sCoord.GetDistanceTo(eCoord) + " метров.";
+            }
+
+            CalculationInfo = cal_info;
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")

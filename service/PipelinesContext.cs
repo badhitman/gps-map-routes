@@ -33,6 +33,9 @@ namespace GpsMapRoutes.service
             modelBuilder.Entity<SensorModel>().Property(x => x.Lat).IsRequired();
             modelBuilder.Entity<SensorModel>().Property(x => x.Lng).IsRequired();
 
+            modelBuilder.Entity<SensorModel>().Property(p => p.OrderIndex).HasColumnOrder(0);
+            //modelBuilder.Entity<SensorModel>().Property(p => p.Id).HasColumnOrder(1);
+
             base.OnModelCreating(modelBuilder);
         }
     }
