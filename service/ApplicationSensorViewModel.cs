@@ -72,7 +72,7 @@ namespace GpsMapRoutes
                     cal_info += "от предыдущей ≈ " + sCoord.GetDistanceTo(eCoord) + " метров.";
                 }
 
-                return cal_info;
+                return cal_info.Trim();
             }
         }
 
