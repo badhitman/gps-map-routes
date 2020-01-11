@@ -75,15 +75,28 @@ namespace GpsMapRoutes
             {
                 string cal_info = string.Empty;
 
+                if (full_calck_distance == 0)
+                {
+                    cal_info += "Без отклонений";
+                }
+                else
+                {
+                    cal_info += "Отклонение (" + (adjustment < SelectedPositionDistance ? "назад" : "вперёд") + "): " +
+                        "\nAuto: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м." +
+                        "\nMan: " + Math.Round(full_calck_distance / 100 * adjustment_percent_factor, 2) + "/" + full_calck_distance + " м.";
+                }
+
+                cal_info += "\n";
+
                 if (PrewSensor is null && NextSensor is null)
                 {
-                    cal_info += "Предыдущих или следующих точек не обнаружено";
+                    cal_info += "\nПредыдущих или следующих точек не обнаружено";
                 }
                 else if (!(PrewSensor is null) && !(NextSensor is null))
                 {
                     var sCoord = new GeoCoordinate(PrewSensor.Lat, PrewSensor.Lng);
                     var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
-                    cal_info += "от предыдущей ≈ " + Math.Round(sCoord.GetDistanceTo(eCoord), 2) + " метров.";
+                    cal_info += "\nот предыдущей ≈ " + Math.Round(sCoord.GetDistanceTo(eCoord), 2) + " метров.";
                     cal_info += "\nрасчётная дистанция ≈ " + Math.Round(PrewSensor.Distance + sCoord.GetDistanceTo(eCoord), 2) + " м.\n";
 
                     sCoord = new GeoCoordinate(NextSensor.Lat, NextSensor.Lng);
@@ -108,12 +121,13 @@ namespace GpsMapRoutes
             }
         }
 
-        public string CurrentMapPosition
-        {
-            get => OwnerWindow.MainMap.Position.ToString();
-        }
+        public string CurrentMapPosition => OwnerWindow.MainMap.Position.ToString();
 
         protected double adjustment;
+        double full_calck_distance;
+        double full_manual_distance;
+        double adjustment_percent_factor;
+        double λ;
         public double Adjustment
         {
             get => adjustment;
@@ -127,17 +141,60 @@ namespace GpsMapRoutes
                 if (route.Points.Count == 1)
                 {
                     OwnerWindow.MainMap.Markers.Add(new GMapMarker(route.Points[0]));
-                    OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
-                    OwnerWindow.MainMap.Position = route.Points[0];
                 }
                 else
                 {
                     OwnerWindow.MainMap.Markers.Add(route);
-                    OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
+                }
+                OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
+
+                // общая расчётная длинна между точками
+                full_calck_distance = 0;
+                λ = 0;
+
+                full_manual_distance = 0;
+                adjustment_percent_factor = 0;
+                if (adjustment < SelectedPositionDistance)
+                {
+                    var sCoord = new GeoCoordinate(PrewSensor.Lat, PrewSensor.Lng);
+                    var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
+
+                    full_calck_distance = Math.Round(sCoord.GetDistanceTo(eCoord), 2);
+                    full_manual_distance = CurrentSensor.Distance - PrewSensor.Distance;
+                    adjustment_percent_factor = (SelectedPositionDistance - adjustment) / (full_manual_distance / 100);
+                    if (adjustment_percent_factor >= 100)
+                    {
+                        OwnerWindow.MainMap.Position = new PointLatLng(PrewSensor.Lat, PrewSensor.Lng);
+                    }
+                    else
+                    {
+                        λ = (full_manual_distance / 100 * (100 - adjustment_percent_factor)) / (full_manual_distance / 100 * adjustment_percent_factor); // am/bm
+                        OwnerWindow.MainMap.Position = new PointLatLng((PrewSensor.Lat + λ * +CurrentSensor.Lat) / (1 + λ), (PrewSensor.Lng + λ * CurrentSensor.Lng) / (1 + λ));
+                    }
+                }
+                else if (adjustment > SelectedPositionDistance)
+                {
+                    var sCoord = new GeoCoordinate(NextSensor.Lat, NextSensor.Lng);
+                    var eCoord = new GeoCoordinate(CurrentSensor.Lat, CurrentSensor.Lng);
+
+                    full_calck_distance = Math.Round(sCoord.GetDistanceTo(eCoord), 2);
+                    full_manual_distance = NextSensor.Distance - CurrentSensor.Distance;
+                    adjustment_percent_factor = (adjustment - SelectedPositionDistance) / (full_manual_distance / 100);
+                    if (adjustment_percent_factor >= 100)
+                    {
+                        OwnerWindow.MainMap.Position = new PointLatLng(NextSensor.Lat, NextSensor.Lng);
+                    }
+                    else
+                    {
+                        λ = (full_manual_distance / 100 * adjustment_percent_factor) / (full_manual_distance / 100 * (100 - adjustment_percent_factor)); // am/bm
+                        OwnerWindow.MainMap.Position = new PointLatLng((CurrentSensor.Lat + λ * NextSensor.Lat) / (1 + λ), (CurrentSensor.Lng + λ * NextSensor.Lng) / (1 + λ));
+                    }
+                }
+                else // adjustment == SelectedPositionDistance
+                {
                     OwnerWindow.MainMap.Position = new PointLatLng(CurrentSensor.Lat, CurrentSensor.Lng);
                 }
-
-                
+                OnPropertyChanged(nameof(CalculationInfo));
             }
         }
 
