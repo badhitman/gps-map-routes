@@ -1,4 +1,8 @@
-﻿using GMap.NET;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using GMap.NET;
 using GMap.NET.WindowsPresentation;
 using GpsMapRoutes.models;
 using GpsMapRoutes.service.commands;
