@@ -11,6 +11,7 @@
             <RowDefinition Height="50" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -25,7 +26,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBox  Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="TextBox_TextChanged">
                         <TextBox.Text>
-                            <Binding Path="Owner.Lat" StringFormat="N12"  NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                            <Binding Path="OwnerContext.Lat" StringFormat="N12"  NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
                                     <local:LatValidationRule/>
                                 </Binding.ValidationRules>
@@ -34,7 +35,7 @@
                     </TextBox>
                     <TextBox Grid.Column="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="TextBox_TextChanged">
                         <TextBox.Text>
-                            <Binding Path="Owner.Lng" StringFormat="N12" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                            <Binding Path="OwnerContext.Lng" StringFormat="N12" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
                                     <local:LngValidationRule/>
                                 </Binding.ValidationRules>
@@ -46,7 +47,7 @@
             <GroupBox Header="Дистанция" Grid.Column="1">
                 <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap" TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
-                        <Binding Path="Owner.CurrentSensorDistance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="OwnerContext.CurrentSensorDistance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged"/>
                     </TextBox.Text>
                 </TextBox>
             </GroupBox>
@@ -75,7 +76,7 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <Slider Name="AdjustmentSlider" Minimum="{Binding MinAdjustment}" Value="{Binding Adjustment}" Maximum="{Binding MaxAdjustment}" Grid.Column="0" Margin="0,0,5,0"/>
-                    <Button Grid.Column="1" ToolTip="Сброс перспективы">Сброс</Button>
+                    <Button Command="{Binding ResetAdjustmentCommand}" Grid.Column="1" ToolTip="Сброс перспективы">Сброс</Button>
                 </Grid>
                 <GroupBox Grid.Row="2" Header="Установки">
                     <Grid Margin="0,3">
@@ -95,5 +96,6 @@
             </Grid>
         </GroupBox>
         <local:Map Grid.Row="2" x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
+        <TextBox Grid.Row="3" Background="LightGray" Text="{Binding CurrentMapPosition,  Mode=OneWay}"/>
     </Grid>
 </Window>

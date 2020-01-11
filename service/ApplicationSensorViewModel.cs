@@ -1,9 +1,11 @@
-﻿using GpsMapRoutes.models;
+﻿using GMap.NET;
+using GMap.NET.WindowsPresentation;
+using GpsMapRoutes.models;
+using GpsMapRoutes.service.commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Device.Location;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace GpsMapRoutes
@@ -11,16 +13,46 @@ namespace GpsMapRoutes
     public class ApplicationSensorViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public ApplicationViewModel Owner { get; }
+        public ApplicationViewModel OwnerContext { get; }
+        public SensorWindow OwnerWindow { get; }
 
-        public SensorModel PrewSensor => SelectedPositionSensorInList + 1 >= Owner.CurrentSensorsList.Count ? null : Owner.CurrentSensorsList[SelectedPositionSensorInList + 1];
-        public int SelectedSensorId => Owner.SelectedSensor?.Id ?? 0;
-        public int SelectedPositionSensorInList => SelectedSensorId <= 0 ? -1 : Owner.CurrentSensorsList.FindIndex(x => x.Id == SelectedSensorId);
-        public double SelectedPositionDistance => SelectedSensorId <= 0 ? 0 : CurrentSensor.Distance;
-        public SensorModel NextSensor => SelectedPositionSensorInList > 0 ? Owner.CurrentSensorsList[SelectedPositionSensorInList - 1] : null;
+        public SensorModel PrewSensor => SelectedPositionSensorInList + 1 >= OwnerContext.CurrentSensorsList.Count ? null : OwnerContext.CurrentSensorsList[SelectedPositionSensorInList + 1];
+        public int SelectedSensorId => OwnerContext.SelectedSensor?.Id ?? 0;
+        public int SelectedPositionSensorInList => SelectedSensorId <= 0 ? -1 : OwnerContext.CurrentSensorsList.FindIndex(x => x.Id == SelectedSensorId);
+        public double SelectedPositionDistance => SelectedSensorId <= 0 ? -1 : CurrentSensor.Distance;
+        public SensorModel NextSensor => SelectedPositionSensorInList > 0 ? OwnerContext.CurrentSensorsList[SelectedPositionSensorInList - 1] : null;
 
-        public SensorModel CurrentSensor => Owner.CurrentSensorsList[Owner.CurrentSensorsList.FindIndex(x => x.Id == SelectedSensorId)];
+        public SensorModel CurrentSensor => OwnerContext.CurrentSensorsList[OwnerContext.CurrentSensorsList.FindIndex(x => x.Id == SelectedSensorId)];
 
+        public GMapRoute SelectedSegmentMapRoute
+        {
+            get
+            {
+                if (CurrentSensor is null)
+                {
+                    return new GMapRoute(new PointLatLng[] { ApplicationViewModel.DefaultPoint }) { ZIndex = -1 };
+                }
+
+                if (PrewSensor is null && NextSensor is null)
+                {
+                    return new GMapRoute(new PointLatLng[] { new PointLatLng(CurrentSensor.Lat, CurrentSensor.Lng) }) { ZIndex = -1 };
+                }
+
+                List<PointLatLng> points = new List<PointLatLng>();
+
+                if (!(PrewSensor is null))
+                {
+                    points.Add(new PointLatLng(PrewSensor.Lat, PrewSensor.Lng));
+                }
+                points.Add(new PointLatLng(CurrentSensor.Lat, CurrentSensor.Lng));
+                if (!(NextSensor is null))
+                {
+                    points.Add(new PointLatLng(NextSensor.Lat, NextSensor.Lng));
+                }
+
+                return new GMapRoute(points) { ZIndex = -1 };
+            }
+        }
 
         public double MinAdjustment => PrewSensor?.Distance ?? SelectedPositionDistance;
         public double MaxAdjustment => NextSensor?.Distance ?? SelectedPositionDistance;
@@ -76,6 +108,11 @@ namespace GpsMapRoutes
             }
         }
 
+        public string CurrentMapPosition
+        {
+            get => OwnerWindow.MainMap.Position.ToString();
+        }
+
         protected double adjustment;
         public double Adjustment
         {
@@ -84,13 +121,59 @@ namespace GpsMapRoutes
             {
                 adjustment = value;
                 OnPropertyChanged(nameof(Adjustment));
+
+                OwnerWindow.MainMap.Markers.Clear();
+                GMapRoute route = SelectedSegmentMapRoute;
+                if (route.Points.Count == 1)
+                {
+                    OwnerWindow.MainMap.Markers.Add(new GMapMarker(route.Points[0]));
+                    OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
+                    OwnerWindow.MainMap.Position = route.Points[0];
+                }
+                else
+                {
+                    OwnerWindow.MainMap.Markers.Add(route);
+                    OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
+                    OwnerWindow.MainMap.Position = new PointLatLng(CurrentSensor.Lat, CurrentSensor.Lng);
+                }
+
+                
             }
         }
 
-        public ApplicationSensorViewModel(ApplicationViewModel setOwner)
+        #region commands
+        private RelayCommand resetAdjustmentCommand;
+        public RelayCommand ResetAdjustmentCommand
         {
-            Owner = setOwner;
+            get
+            {
+                return resetAdjustmentCommand ??
+                  (resetAdjustmentCommand = new RelayCommand(obj =>
+                  {
+                      Adjustment = SelectedPositionDistance;
+                  },
+                (obj) => (true)));
+            }
+        }
+        #endregion
+
+        public ApplicationSensorViewModel(ApplicationViewModel setOwner, SensorWindow sensorWindow)
+        {
+            OwnerContext = setOwner;
+            OwnerWindow = sensorWindow;
+            OwnerWindow.MainMap.OnPositionChanged += MainMap_OnPositionChanged;
+            OwnerWindow.MainMap.Loaded += MainMap_Loaded;
+
+        }
+
+        private void MainMap_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
             Adjustment = SelectedPositionDistance;
+        }
+
+        private void MainMap_OnPositionChanged(PointLatLng point)
+        {
+            OnPropertyChanged(nameof(CurrentMapPosition));
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")

@@ -214,7 +214,7 @@ namespace GpsMapRoutes
 
                       OwnerWin.MainMap.Position = new PointLatLng(selectedSensor.Lat, selectedSensor.Lng);
 
-                      SensorWindow sensorEditWindow = new SensorWindow(new ApplicationSensorViewModel(this));
+                      SensorWindow sensorEditWindow = new SensorWindow(this);
 
                       Lat = selectedSenderSensor.Lat;
                       Lng = selectedSenderSensor.Lng;

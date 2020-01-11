@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:GpsMapRoutes"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
         Title="MainWindow" MinHeight="250" Height="450" MinWidth="450" Width="800">
     <Window.Resources>
         <Style TargetType="TextBox">

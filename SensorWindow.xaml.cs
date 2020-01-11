@@ -1,4 +1,6 @@
-﻿using GMap.NET.MapProviders;
+﻿using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsPresentation;
 using System.Windows;
 
 namespace GpsMapRoutes
@@ -8,15 +10,14 @@ namespace GpsMapRoutes
     /// </summary>
     public partial class SensorWindow : Window
     {
-        public SensorWindow(ApplicationSensorViewModel sensorContext)
-        {
-            DataContext = sensorContext;
-            InitializeComponent();
-            MainMap.MapProvider = GMapProviders.YandexMap;
-            MainMap.Position = new GMap.NET.PointLatLng(sensorContext.CurrentSensor.Lat, sensorContext.CurrentSensor.Lng);
-        }
-
         private ApplicationSensorViewModel ContextModel => DataContext as ApplicationSensorViewModel;
+
+        public SensorWindow(ApplicationViewModel sensorContext)
+        {
+            InitializeComponent();
+            DataContext = new ApplicationSensorViewModel(sensorContext, this);
+            MainMap.MapProvider = GMapProviders.YandexMap;            
+        }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
