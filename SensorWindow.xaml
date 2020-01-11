@@ -92,7 +92,7 @@
                         <TextBlock HorizontalAlignment="Right" Grid.Column="2" Text="{Binding NextSensorDistance}"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="4" Header="Перспективы">
+                <GroupBox Grid.Row="4" Header="Расчёты">
                     <TextBox Text="{Binding CalculationInfo, Mode=OneWay}" Background="LightGray" IsReadOnly="True"  Grid.Row="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
                 </GroupBox>
             </Grid>

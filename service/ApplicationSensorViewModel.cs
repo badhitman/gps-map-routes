@@ -82,8 +82,8 @@ namespace GpsMapRoutes
                 else
                 {
                     cal_info += "Отклонение (" + (adjustment < SelectedPositionDistance ? "назад" : "вперёд") + "): " +
-                        "\nAuto: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м." +
-                        "\nMan: " + Math.Round(full_calck_distance / 100 * adjustment_percent_factor, 2) + "/" + full_calck_distance + " м.";
+                        "\nAuto: " + Math.Round(full_calck_distance / 100 * adjustment_percent_factor, 2) + "/" + full_calck_distance + " м." +
+                        "\nMan: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м.";
                 }
 
                 cal_info += "\n";
