@@ -11,7 +11,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using GMap.NET;
 using GMap.NET.WindowsPresentation;
-using GpsMapRoutes.CustomMarkers;
 using GpsMapRoutes.models;
 using GpsMapRoutes.service;
 using GpsMapRoutes.service.commands;

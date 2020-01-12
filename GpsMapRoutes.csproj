@@ -164,6 +164,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="CustomMarkers\CustomMarkerRed.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -174,6 +178,9 @@
     </Compile>
     <Compile Include="CustomMarkers\CustomMarkerDemo.xaml.cs">
       <DependentUpon>CustomMarkerDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomMarkers\CustomMarkerRed.xaml.cs">
+      <DependentUpon>CustomMarkerRed.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -256,6 +263,9 @@
     <Resource Include="demo\pipeline-route-demo-2.jpg" />
     <Resource Include="demo\pipeline-route-demo-3.jpg" />
     <Resource Include="demo\pipeline-route-demo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CustomMarkers\red-dot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

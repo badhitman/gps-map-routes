@@ -147,7 +147,7 @@ namespace GpsMapRoutes
                 {
                     cal_info += "\nОтклонение (" + (adjustment < SelectedSensorDistance ? "назад" : "вперёд") + "): " +
                         "\nGPS: " + Math.Round(full_calck_distance / 100 * adjustment_percent_factor, 2) + "/" + full_calck_distance + " м." +
-                        "\nMth: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м.";
+                        "\nMan: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м.";
                 }
 
                 return cal_info.Trim();
@@ -173,6 +173,9 @@ namespace GpsMapRoutes
                 else
                 {
                     OwnerWindow.MainMap.Markers.Add(route);
+                    GMapMarker marker = new GMapMarker(new PointLatLng(OwnerContext.SelectedSensor.Lat, OwnerContext.SelectedSensor.Lng));
+                    marker.Shape = new CustomMarkerRed(OwnerWindow, marker, "Исходная позиция");
+                    OwnerWindow.MainMap.Markers.Add(marker);
                 }
                 OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
 
