@@ -248,7 +248,7 @@ namespace GpsMapRoutes
                   {
                       Adjustment = SelectedSensorDistance;
                   },
-                (obj) => (true)));
+                (obj) => (OwnerWindow.MainMap.IsLoaded)));
             }
         }
         #endregion
@@ -258,7 +258,7 @@ namespace GpsMapRoutes
             OwnerContext = setOwner;
             OwnerWindow = sensorWindow;
             OwnerWindow.MainMap.OnPositionChanged += delegate (PointLatLng point) { OnPropertyChanged(nameof(CalculationInfo)); };
-            OwnerWindow.MainMap.Loaded += delegate (object sender, System.Windows.RoutedEventArgs e) { Adjustment = SelectedSensorDistance; };
+            OwnerWindow.MainMap.Loaded += delegate (object sender, System.Windows.RoutedEventArgs e) { ResetAdjustmentCommand.Execute(null); };
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")

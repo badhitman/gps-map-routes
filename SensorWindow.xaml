@@ -79,7 +79,7 @@
                 </TextBox.Text>
             </TextBox>
         </GroupBox>
-        <local:Map IsEnabled="False"  IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="3" x:Name="MainMap" Zoom="13" MaxZoom="21" MinZoom="10" />
+        <local:Map IsEnabled="False"  IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="3" x:Name="MainMap" Zoom="13" MaxZoom="17" MinZoom="10" />
         <GroupBox BorderThickness="0,1" Header="Перспективы" Grid.Row="4">
             <Grid>
                 <Grid.RowDefinitions>
