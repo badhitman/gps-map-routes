@@ -124,7 +124,7 @@ namespace GpsMapRoutes
                     var sCoord = new GeoCoordinate(PrewSensor.Lat, PrewSensor.Lng);
                     var eCoord = new GeoCoordinate(OwnerContext.SelectedSensor.Lat, OwnerContext.SelectedSensor.Lng);
                     ret_info += "от предыдущей ≈ " + sCoord.GetDistanceTo(eCoord) + " метров.";
-                    ret_info += "\nрасчётная дистанция ≈ " + Math.Round(PrewSensor.Distance - sCoord.GetDistanceTo(eCoord), 2) + " м.\n";
+                    ret_info += "\nрасчётная дистанция ≈ " + Math.Round(PrewSensor.Distance + sCoord.GetDistanceTo(eCoord), 2) + " м.\n";
                 }
 
                 return ret_info.Trim();
@@ -173,11 +173,18 @@ namespace GpsMapRoutes
                 else
                 {
                     OwnerWindow.MainMap.Markers.Add(route);
-                    GMapMarker marker = new GMapMarker(new PointLatLng(OwnerContext.SelectedSensor.Lat, OwnerContext.SelectedSensor.Lng));
-                    marker.Shape = new CustomMarkerRed(OwnerWindow, marker, "Исходная позиция");
-                    OwnerWindow.MainMap.Markers.Add(marker);
+                    if (adjustment != SelectedSensorDistance)
+                    {
+                        GMapMarker marker = new GMapMarker(new PointLatLng(OwnerContext.SelectedSensor.Lat, OwnerContext.SelectedSensor.Lng));
+                        marker.Shape = new CustomMarkerRed(OwnerWindow, marker, "Исходная позиция");
+                        OwnerWindow.MainMap.Markers.Add(marker);
+                    }
+                    else
+                    {
+                        OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
+                    }
                 }
-                OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
+                //
 
                 // общая расчётная длинна между точками
                 full_calck_distance = 0;
@@ -225,9 +232,8 @@ namespace GpsMapRoutes
                 {
                     OwnerWindow.MainMap.Position = new PointLatLng(OwnerContext.SelectedSensor.Lat, OwnerContext.SelectedSensor.Lng);
                 }
-
+                //OwnerWindow.MainMap.ZoomAndCenterMarkers(null);
                 OnPropertyChanged(nameof(CalculationInfo));
-                // OnPropertyChanged(nameof(DistanceMetadata));
             }
         }
 
