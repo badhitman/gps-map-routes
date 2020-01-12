@@ -20,8 +20,7 @@ namespace GpsMapRoutes
         }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            
+        {            
             ContextModel.OnPropertyChanged(nameof(ContextModel.DistanceMetadata));
             ContextModel.OnPropertyChanged(nameof(ContextModel.SelectedSensorDistance));
         }
