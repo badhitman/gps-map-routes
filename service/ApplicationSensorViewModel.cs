@@ -183,7 +183,7 @@ namespace GpsMapRoutes
                     else
                     {
                         λ = (full_manual_distance / 100 * (100 - adjustment_percent_factor)) / (full_manual_distance / 100 * adjustment_percent_factor); // am/bm
-                        OwnerWindow.MainMap.Position = new PointLatLng((PrewSensor.Lat + λ * +CurrentSensor.Lat) / (1 + λ), (PrewSensor.Lng + λ * CurrentSensor.Lng) / (1 + λ));
+                        OwnerWindow.MainMap.Position = new PointLatLng((PrewSensor.Lat + λ * CurrentSensor.Lat) / (1 + λ), (PrewSensor.Lng + λ * CurrentSensor.Lng) / (1 + λ));
                     }
                 }
                 else if (adjustment > SelectedPositionDistance)
