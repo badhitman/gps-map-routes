@@ -43,7 +43,7 @@ namespace GpsMapRoutes.models
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        /*public override bool Equals(object other)
+        public override bool Equals(object other)
         {
             if (Id == 0 || other is null || other.GetType() != this.GetType())
                 return false;
@@ -81,6 +81,6 @@ namespace GpsMapRoutes.models
                 return true;
             //
             return !a1.Equals(a2);
-        }*/
+        }
     }
 }

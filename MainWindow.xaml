@@ -125,7 +125,8 @@
                             <GridView>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Lat}" Width="100">Lat</GridViewColumn>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Lng}" Width="100">Lng</GridViewColumn>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Distance}" Width="200">Дистанция</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Distance}" Width="100">Дистанция</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Information}" Width="200">Примечание</GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>

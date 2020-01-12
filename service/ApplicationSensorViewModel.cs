@@ -73,19 +73,34 @@ namespace GpsMapRoutes
         public string NextSensorDistance => PrewSensor is null && NextSensor is null ? "" : NextSensor is null ? SelectedPositionDistance.ToString() : "(+" + (NextSensor.Distance - SelectedPositionDistance) + ") " + NextSensor.Distance.ToString();
         #endregion
 
+        public string Information
+        {
+            get => CurrentSensor?.Information;
+            set
+            {
+                if (CurrentSensor is null)
+                    return;
+
+                CurrentSensor.Information = value;
+                OnPropertyChanged(nameof(Information));
+            }
+        }
+
         public string CalculationInfo
         {
             get
             {
-                string cal_info = string.Empty;
+                string cal_info = OwnerWindow.MainMap.Position.ToString();
+
+                cal_info += "\n";
 
                 if (full_calck_distance == 0)
                 {
-                    cal_info += "Без отклонений";
+                    cal_info += "\nБез отклонений";
                 }
                 else
                 {
-                    cal_info += "Отклонение (" + (adjustment < SelectedPositionDistance ? "назад" : "вперёд") + "): " +
+                    cal_info += "\nОтклонение (" + (adjustment < SelectedPositionDistance ? "назад" : "вперёд") + "): " +
                         "\nAuto: " + Math.Round(full_calck_distance / 100 * adjustment_percent_factor, 2) + "/" + full_calck_distance + " м." +
                         "\nMan: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м.";
                 }
@@ -125,13 +140,8 @@ namespace GpsMapRoutes
             }
         }
 
-        public string CurrentMapPosition => OwnerWindow.MainMap.Position.ToString();
-
-        protected double adjustment;
-        double full_calck_distance;
-        double full_manual_distance;
-        double adjustment_percent_factor;
-        double λ;
+        double full_calck_distance, full_manual_distance, adjustment_percent_factor;
+        protected double adjustment; double λ;
         public double Adjustment
         {
             get => adjustment;
@@ -234,7 +244,7 @@ namespace GpsMapRoutes
 
         private void MainMap_OnPositionChanged(PointLatLng point)
         {
-            OnPropertyChanged(nameof(CurrentMapPosition));
+            OnPropertyChanged(nameof(CalculationInfo));
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")

@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GpsMapRoutes"
         mc:Ignorable="d"
-        Title="Point edit" MinHeight="350" Height="500" MinWidth="250" Width="480">
+        Title="Point edit" MinHeight="400" Height="500" MinWidth="250" Width="480">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -52,10 +53,29 @@
                 </TextBox>
             </GroupBox>
         </Grid>
-        <GroupBox BorderThickness="0,1" Header="Перспективы" Grid.Row="1">
+        <GroupBox Grid.Row="1" Header="Отношения (дистанции)" Margin="1,1,1,5">
+            <Grid Margin="0,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding PrevSensorDistance}"/>
+                <TextBlock HorizontalAlignment="Center" Grid.Column="1" Text="{Binding MidleSensorDistance}"/>
+                <TextBlock HorizontalAlignment="Right" Grid.Column="2" Text="{Binding NextSensorDistance}"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Примечание" Grid.Row="2">
+            <TextBox  HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                <TextBox.Text>
+                    <Binding Path="Information" UpdateSourceTrigger="PropertyChanged"/>
+                </TextBox.Text>
+            </TextBox>
+        </GroupBox>
+        <local:Map IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="3" x:Name="MainMap" Zoom="13" MaxZoom="21" MinZoom="10" />
+        <GroupBox BorderThickness="0,1" Header="Перспективы" Grid.Row="4">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -80,24 +100,11 @@
                     <Button Command="{Binding ResetAdjustmentCommand}" Grid.Column="1" ToolTip="Сброс перспективы">Сброс</Button>
                 </Grid>
                 <TextBlock HorizontalAlignment="Center" Grid.Row="2" Text="{Binding Adjustmen, Mode=OneWay}"/>
-                <GroupBox Grid.Row="3" Header="Установки">
-                    <Grid Margin="0,3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding PrevSensorDistance}"/>
-                        <TextBlock HorizontalAlignment="Center" Grid.Column="1" Text="{Binding MidleSensorDistance}"/>
-                        <TextBlock HorizontalAlignment="Right" Grid.Column="2" Text="{Binding NextSensorDistance}"/>
-                    </Grid>
-                </GroupBox>
+                
                 <GroupBox Grid.Row="4" Header="Расчёты">
                     <TextBox Text="{Binding CalculationInfo, Mode=OneWay}" Background="LightGray" IsReadOnly="True"  Grid.Row="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
                 </GroupBox>
             </Grid>
         </GroupBox>
-        <local:Map IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="2" x:Name="MainMap" Zoom="13" MaxZoom="21" MinZoom="10" />
-        <TextBox Grid.Row="3" Background="LightGray" Text="{Binding CurrentMapPosition,  Mode=OneWay}"/>
     </Grid>
 </Window>
