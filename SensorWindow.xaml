@@ -79,7 +79,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="190" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Margin="0,3">
                     <Grid.ColumnDefinitions>
@@ -101,7 +101,7 @@
                 </Grid>
                 <TextBlock HorizontalAlignment="Center" Grid.Row="2" Text="{Binding Adjustmen, Mode=OneWay}"/>
                 
-                <GroupBox Grid.Row="4" Header="Расчёты">
+                <GroupBox Grid.Row="3" Header="Расчёты">
                     <TextBox Text="{Binding CalculationInfo, Mode=OneWay}" Background="LightGray" IsReadOnly="True"  Grid.Row="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
                 </GroupBox>
             </Grid>
