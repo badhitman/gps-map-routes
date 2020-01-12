@@ -16,17 +16,14 @@ namespace GpsMapRoutes
         {
             InitializeComponent();
             DataContext = new ApplicationSensorViewModel(sensorContext, this);
-            MainMap.MapProvider = GMapProviders.YandexMap;            
+            MainMap.MapProvider = GMapProviders.YandexMap;
         }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            ContextModel.OnPropertyChanged(nameof(ContextModel.PrevSensorDistance));
-            ContextModel.OnPropertyChanged(nameof(ContextModel.MidleSensorDistance));
-            ContextModel.OnPropertyChanged(nameof(ContextModel.NextSensorDistance));
-            ContextModel.OnPropertyChanged(nameof(ContextModel.CalculationInfo));
-            ContextModel.OnPropertyChanged(nameof(ContextModel.SelectedPositionDistance));
-            ContextModel.OnPropertyChanged(nameof(ContextModel.Adjustment));
+            
+            ContextModel.OnPropertyChanged(nameof(ContextModel.DistanceMetadata));
+            ContextModel.OnPropertyChanged(nameof(ContextModel.SelectedSensorDistance));
         }
     }
 }

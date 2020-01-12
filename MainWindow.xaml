@@ -48,7 +48,7 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
-            <Expander IsEnabled="{Binding IsPipelineSelected}" Header="{Binding SelectedPipeline.Title}" MaxHeight="450" Grid.Row="0" HorizontalAlignment="Stretch" IsExpanded="False">
+            <Expander IsEnabled="{Binding IsPipelineSelected}" Header="{Binding SelectedPipelineTitle}" MaxHeight="450" Grid.Row="0" HorizontalAlignment="Stretch" IsExpanded="False">
                 <StackPanel Background="#FFE5E5E5">
                     <GroupBox Header="Наименование трубопровода" BorderThickness="0">
                         <TextBox HorizontalAlignment="Stretch" Height="23" TextWrapping="Wrap">
@@ -97,7 +97,7 @@
                             <GroupBox Header="Дистанция" Grid.Column="1">
                                 <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap">
                                     <TextBox.Text>
-                                        <Binding Path="CurrentSensorDistance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding Path="Distance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged">
                                             <Binding.ValidationRules>
                                                 <local:NumberValidationRule/>
                                             </Binding.ValidationRules>

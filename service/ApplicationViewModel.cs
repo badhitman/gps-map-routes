@@ -21,11 +21,10 @@ namespace GpsMapRoutes
     public class ApplicationViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        PipelinesContext db;
+        public PipelinesContext db { get; }
         public MainWindow OwnerWin { get; }
         public static PointLatLng DefaultPoint = new PointLatLng(55.755812, 37.617820);
 
-        private bool autoSaveSensorState = false;
         private bool autoPositionCenter = false;
 
         private void SaveSensorState()
@@ -35,14 +34,17 @@ namespace GpsMapRoutes
                 return;
             }
 
-            if (!autoSaveSensorState)
-            {
-                return;
-            }
-
             SelectedSensor.Lat = Lat;
             SelectedSensor.Lng = Lng;
-            SelectedSensor.Distance = CurrentSensorDistance;
+            SelectedSensor.Distance = Distance;
+
+            db.Sensors.Attach(SelectedSensor);
+            db.Entry(SelectedSensor).State = EntityState.Unchanged;
+            db.Entry(SelectedSensor).Property(x => x.Lat).IsModified = true;
+            db.Entry(SelectedSensor).Property(x => x.Lng).IsModified = true;
+            db.Entry(SelectedSensor).Property(x => x.Distance).IsModified = true;
+            db.SaveChangesAsync();
+            
             ReloadPipe();
 
             if (autoPositionCenter)
@@ -101,7 +103,7 @@ namespace GpsMapRoutes
 
                       SensorModel s = new SensorModel(Lat, Lng, SelectedPipeline.Id)
                       {
-                          Distance = CurrentSensorDistance,
+                          Distance = Distance,
                           OrderIndex = db.Sensors.Any(x => x.PipelineId == currentPiplineId) ? db.Sensors.Where(x => x.PipelineId == currentPiplineId).Max(x => x.OrderIndex) + 1 : 1
                       };
 
@@ -109,7 +111,7 @@ namespace GpsMapRoutes
                       db.SaveChanges();
                       Lat = 0;
                       Lng = 0;
-                      CurrentSensorDistance = 0;
+                      Distance = 0;
                       ReloadPipe();
                   },
                 (obj) => !(SelectedPipeline is null)));
@@ -216,19 +218,19 @@ namespace GpsMapRoutes
 
                       SensorWindow sensorEditWindow = new SensorWindow(this);
 
-                      Lat = selectedSenderSensor.Lat;
-                      Lng = selectedSenderSensor.Lng;
-                      CurrentSensorDistance = selectedSenderSensor.Distance;
+                      lat = selectedSenderSensor.Lat;
+                      lng = selectedSenderSensor.Lng;
+                      distance = selectedSenderSensor.Distance;
+                      OnPropertyChanged(nameof(Lat)); OnPropertyChanged(nameof(Lng)); OnPropertyChanged(nameof(Distance));
 
-                      autoSaveSensorState = true;
                       autoPositionCenter = true;
                       sensorEditWindow.ShowDialog();
                       autoPositionCenter = false;
-                      autoSaveSensorState = false;
 
-                      Lat = 0;
-                      Lng = 0;
-                      CurrentSensorDistance = 0;
+                      lat = 0;
+                      lng = 0;
+                      distance = 0;
+                      OnPropertyChanged(nameof(Lat)); OnPropertyChanged(nameof(Lng)); OnPropertyChanged(nameof(Distance));
                   },
                 (obj) => !(SelectedSensor is null)));
             }
@@ -279,9 +281,12 @@ namespace GpsMapRoutes
                 OnPropertyChanged(nameof(SelectedPipeline));
                 // формируем свежий список точек
                 OnPropertyChanged(nameof(CurrentSensors));
+
+                OnPropertyChanged(nameof(SelectedPipelineTitle));
                 ReloadPipe();
             }
         }
+        public string SelectedPipelineTitle => SelectedPipeline?.Title ?? "Выберите маршрут";
 
         private bool isPipelineSelected = false;
         /// <summary>
@@ -341,14 +346,14 @@ namespace GpsMapRoutes
             }
         }
 
-        private double currentSensorDistance;
-        public double CurrentSensorDistance
+        private double distance;
+        public double Distance
         {
-            get => currentSensorDistance;
+            get => distance;
             set
             {
-                currentSensorDistance = value;
-                OnPropertyChanged(nameof(CurrentSensorDistance));
+                distance = value;
+                OnPropertyChanged(nameof(Distance));
                 SaveSensorState();
             }
         }

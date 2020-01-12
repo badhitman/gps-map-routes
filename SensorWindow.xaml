@@ -48,31 +48,38 @@
             <GroupBox Header="Дистанция" Grid.Column="1">
                 <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap" TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
-                        <Binding Path="OwnerContext.CurrentSensorDistance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="OwnerContext.Distance" StringFormat="N2" UpdateSourceTrigger="PropertyChanged"/>
                     </TextBox.Text>
                 </TextBox>
             </GroupBox>
         </Grid>
         <GroupBox Grid.Row="1" Header="Отношения (дистанции)" Margin="1,1,1,5">
-            <Grid Margin="0,3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding PrevSensorDistance}"/>
-                <TextBlock HorizontalAlignment="Center" Grid.Column="1" Text="{Binding MidleSensorDistance}"/>
-                <TextBlock HorizontalAlignment="Right" Grid.Column="2" Text="{Binding NextSensorDistance}"/>
-            </Grid>
+            <StackPanel>
+                <Grid Margin="0,3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding PrevSensorDistance}"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column="1" Text="{Binding MidleSensorDistance}"/>
+                    <TextBlock HorizontalAlignment="Right" Grid.Column="2" Text="{Binding NextSensorDistance}"/>
+                </Grid>
+                <TextBox Background="LightGray" Height="auto" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
+                    <TextBox.Text>
+                        <Binding Path="DistanceMetadata" Mode="OneWay"/>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
         </GroupBox>
-        <GroupBox Header="Примечание" Grid.Row="2">
+        <GroupBox Header="Примечание" Grid.Row="2" Margin="1,3">
             <TextBox  HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top">
                 <TextBox.Text>
                     <Binding Path="Information" UpdateSourceTrigger="PropertyChanged"/>
                 </TextBox.Text>
             </TextBox>
         </GroupBox>
-        <local:Map IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="3" x:Name="MainMap" Zoom="13" MaxZoom="21" MinZoom="10" />
+        <local:Map IsEnabled="False"  IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="3" x:Name="MainMap" Zoom="13" MaxZoom="21" MinZoom="10" />
         <GroupBox BorderThickness="0,1" Header="Перспективы" Grid.Row="4">
             <Grid>
                 <Grid.RowDefinitions>
@@ -100,7 +107,7 @@
                     <Button Command="{Binding ResetAdjustmentCommand}" Grid.Column="1" ToolTip="Сброс перспективы">Сброс</Button>
                 </Grid>
                 <TextBlock HorizontalAlignment="Center" Grid.Row="2" Text="{Binding Adjustmen, Mode=OneWay}"/>
-                
+
                 <GroupBox Grid.Row="3" Header="Расчёты">
                     <TextBox Text="{Binding CalculationInfo, Mode=OneWay}" Background="LightGray" IsReadOnly="True"  Grid.Row="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
                 </GroupBox>
