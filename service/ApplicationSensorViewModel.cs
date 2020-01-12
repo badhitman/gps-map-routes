@@ -150,7 +150,7 @@ namespace GpsMapRoutes
                         "\nMan: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м.";
                 }
 
-                return cal_info.Trim();
+                return cal_info.Trim()/* + "\n\n{min:" + MinAdjustment + "; Adjustment: " + Adjustment+"; max:" + MaxAdjustment + ";}"*/;
             }
         }
 
@@ -259,6 +259,8 @@ namespace GpsMapRoutes
             OwnerWindow = sensorWindow;
             OwnerWindow.MainMap.OnPositionChanged += delegate (PointLatLng point) { OnPropertyChanged(nameof(CalculationInfo)); };
             OwnerWindow.MainMap.Loaded += delegate (object sender, System.Windows.RoutedEventArgs e) { ResetAdjustmentCommand.Execute(null); };
+            //OnPropertyChanged(nameof(MinAdjustment));
+            //OnPropertyChanged(nameof(MaxAdjustment));
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")
