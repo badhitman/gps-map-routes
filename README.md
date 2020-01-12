@@ -8,5 +8,3 @@ Wpf mvvm map app
 ![pipeline routes 2](./demo/pipeline-route-demo-2.jpg)
 
 ![pipeline routes 3](./demo/pipeline-route-demo-3.jpg)
-
-![pipeline routes 4](./demo/pipeline-route-demo-4.jpg)

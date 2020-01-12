@@ -257,9 +257,6 @@
     <Resource Include="demo\pipeline-route-demo-3.jpg" />
     <Resource Include="demo\pipeline-route-demo.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="demo\pipeline-route-demo-4.jpg" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
