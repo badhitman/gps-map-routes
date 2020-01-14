@@ -5,7 +5,7 @@
 using System.Data.Entity;
 using GpsMapRoutes.models;
 
-namespace GpsMapRoutes.service
+namespace GpsMapRoutes
 {
     public class PipelinesContext : DbContext
     {

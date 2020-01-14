@@ -193,6 +193,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Map.cs" />
+    <Compile Include="Migrations\202001140259194_FirstMigration.cs" />
+    <Compile Include="Migrations\202001140259194_FirstMigration.designer.cs">
+      <DependentUpon>202001140259194_FirstMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="service\ApplicationSensorViewModel.cs" />
     <Compile Include="service\ApplicationViewModel.cs" />
     <Compile Include="models\AbstractModel.cs" />
@@ -220,6 +225,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\202001140259194_FirstMigration.resx">
+      <DependentUpon>202001140259194_FirstMigration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
