@@ -187,7 +187,7 @@
     <Compile Include="SensorWindow.xaml.cs">
       <DependentUpon>SensorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="service\commands\RelayCommand.cs" />
+    <Compile Include="service\RelayCommand.cs" />
     <Compile Include="service\validation\PipelineNameValidationRule.cs" />
     <Compile Include="service\validation\LngValidationRule.cs" />
     <Compile Include="service\validation\LatValidationRule.cs" />

@@ -4,6 +4,10 @@
 
 namespace GpsMapRoutes.models
 {
+    /// <summary>
+    /// Сенсор/Датчик/Точка
+    /// Точка на маршруте
+    /// </summary>
     public class SensorModel : AbstractModel
     {
         public SensorModel() { }
@@ -14,6 +18,9 @@ namespace GpsMapRoutes.models
             PipelineId = pipe;
         }
 
+        /// <summary>
+        /// Труба-владелец точки
+        /// </summary>
         public PipelineModel Pipeline { get; set; }
         public int PipelineId { get; set; }
 
@@ -31,6 +38,9 @@ namespace GpsMapRoutes.models
             set { lng = value; OnPropertyChanged(nameof(Lng)); }
         }
 
+        /// <summary>
+        /// Ручная установка дистанции, отсчитываемой от первой точки
+        /// </summary>
         private double distance;
         public double Distance
         {

@@ -16,11 +16,22 @@ using System.Runtime.CompilerServices;
 
 namespace GpsMapRoutes
 {
+    /// <summary>
+    /// Контекст для окна редактирования точки
+    /// </summary>
     public class ApplicationSensorViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public ApplicationViewModel OwnerContext { get; }
         public SensorWindow OwnerWindow { get; }
+
+        public ApplicationSensorViewModel(ApplicationViewModel setOwner, SensorWindow sensorWindow)
+        {
+            OwnerContext = setOwner;
+            OwnerWindow = sensorWindow;
+            OwnerWindow.MainMap.OnPositionChanged += delegate (PointLatLng point) { OnPropertyChanged(nameof(CalculationInfo)); };
+            OwnerWindow.MainMap.Loaded += delegate (object sender, System.Windows.RoutedEventArgs e) { ResetAdjustmentCommand.Execute(null); };
+        }
 
         public SensorModel PrewSensor => SelectedPositionSensorInList + 1 >= OwnerContext.CurrentSensorsList.Count ? null : OwnerContext.CurrentSensorsList[SelectedPositionSensorInList + 1];
         //public int SelectedSensorId => OwnerContext.SelectedSensor?.Id ?? 0;
@@ -28,6 +39,11 @@ namespace GpsMapRoutes
         public double SelectedSensorDistance => OwnerContext.SelectedSensor is null ? -1 : OwnerContext.SelectedSensor.Distance;
         public SensorModel NextSensor => SelectedPositionSensorInList > 0 ? OwnerContext.CurrentSensorsList[SelectedPositionSensorInList - 1] : null;
 
+        /// <summary>
+        /// "Виртуальный" маршрут выбранного сегмента. Сегмент состоит из последовательности точек: "предыдущая"(если есть), "текущая", "следующая"(если есть)
+        /// Например, выбрав для редактирования первую точку на маршруте, у сегмента не будет предыдущей => сегмент будет состоять из последовательности [текущей + следующей] точек.
+        /// Сегмент для последняей точки на маршруте напротив будет состоять из последовательности [предыдущей + текущей] точек.
+        /// </summary>
         public GMapRoute SelectedSegmentMapRoute
         {
             get
@@ -58,21 +74,59 @@ namespace GpsMapRoutes
             }
         }
 
+        /// <summary>
+        /// Минимальная дистанция. Опирается на предыдущей точке маршрута, т.е. не может быть меньше чем у предыдущей
+        /// </summary>
         public double MinAdjustment => PrewSensor?.Distance ?? SelectedSensorDistance;
+
+        /// <summary>
+        /// Максимальная дистанция. Опирается на следующей точке маршрута, т.е. не может быть больше чем у следующей
+        /// </summary>
         public double MaxAdjustment => NextSensor?.Distance ?? SelectedSensorDistance;
 
         #region структурные заголовки
+        ///////////////////////////////////////////////////////////////////////////////////
+        // Заголовки для отображения структуры/строения текущего сегмента.
+
+        /// <summary>
+        /// Заголовок левой (предыдущей, в сторону начала маршрута) границы сегмента
+        /// </summary>
         public string PrevSensorTitle => PrewSensor is null || (PrewSensor is null && NextSensor is null) ? "Текущий" : "Предыдущий";
+
+        /// <summary>
+        /// Заголовок середины сегмента (если у сегмента больше двух точек)
+        /// </summary>
         public string MidleSensorTitle => PrewSensor is null || NextSensor is null ? "" : "Текущий";
+
+        /// <summary>
+        /// Заголовок правой (следующей в сторону конца маршрута) границы сегмента (если у сегмента больше одной точки)
+        /// </summary>
         public string NextSensorTitle => PrewSensor is null && NextSensor is null ? "" : NextSensor is null ? "Текущий" : "Следующий";
         #endregion
 
-        #region установленные пользователем distance
+        #region заголовки для установленных пользователем distance для точек у выбранного сегмента
+        ///////////////////////////////////////////////////////////////////////////////////
+        // Заголовки для отображения введёных пользователем дистанций, в том числе для предыдущей/следующей точек сегмента (при наличии)
+
+        /// <summary>
+        /// Дистанция, введёная пользователем для предыдущей точки и расчёт отклонения от текущей
+        /// </summary>
         public string PrevSensorDistance => PrewSensor is null || (PrewSensor is null && NextSensor is null) ? SelectedSensorDistance.ToString() : PrewSensor.Distance.ToString() + " (-" + (SelectedSensorDistance - PrewSensor.Distance).ToString() + ")";
+
+        /// <summary>
+        /// Дистанция, введёная пользователем для текущей точки
+        /// </summary>
         public string MidleSensorDistance => PrewSensor is null || NextSensor is null ? "" : SelectedSensorDistance.ToString();
+
+        /// <summary>
+        /// Дистанция, введёная пользователем для следующей точки и расчёт отклонения от текущей
+        /// </summary>
         public string NextSensorDistance => PrewSensor is null && NextSensor is null ? "" : NextSensor is null ? SelectedSensorDistance.ToString() : "(+" + (NextSensor.Distance - SelectedSensorDistance) + ") " + NextSensor.Distance.ToString();
         #endregion
 
+        /// <summary>
+        /// Текущий провайдер отображения карт
+        /// </summary>
         private GMapProvider gMapProvider = GMapProviders.YandexHybridMap;
         public GMapProvider MapProvider
         {
@@ -84,6 +138,9 @@ namespace GpsMapRoutes
             }
         }
 
+        /// <summary>
+        /// Наименование (кртакое описание) точки
+        /// </summary>
         public string Information
         {
             get => OwnerContext.SelectedSensor?.Information;
@@ -104,6 +161,9 @@ namespace GpsMapRoutes
             }
         }
 
+        /// <summary>
+        /// Сводная информация о дистанциях от текущей точки сегмента на основании указаной пользователем дистанции для текущей точки и расстояния до сосдних GPS координат.
+        /// </summary>
         public string DistanceMetadata
         {
             get
@@ -143,6 +203,13 @@ namespace GpsMapRoutes
             }
         }
 
+        /// <summary>
+        /// Сводная информация о положении слайдера.
+        /// В исходнм состояние (или после сброса) текущее положение слайдера равно введёной дистанции текущей точки,
+        /// минимальное значение равно пользовательской дистанции "предыдущей" точки, а максимальное равно следующей пользовательской дистанции.
+        /// При отклонении ползунка в ту или иную сторону от положения начального баланса будет рассчитано отклонение в метрах.
+        /// Расчёты основаны на введёных дистанциях пользователем без учёта автоматически рассчитаного расстояния между GPS координатами
+        /// </summary>
         public string CalculationInfo
         {
             get
@@ -157,7 +224,7 @@ namespace GpsMapRoutes
                 }
                 else
                 {
-                    cal_info += "\nОтклонение (" + (adjustment < SelectedSensorDistance ? "назад" : "вперёд") + "): " +
+                    cal_info += "\nОтклонение (" + (adjustment < SelectedSensorDistance ? Math.Round(adjustment_percent_factor, 2) + "% " + "назад, в сторону предыдущей точки" : Math.Round(adjustment_percent_factor, 2) + "% " + "вперёд, в сторону следующей точки") + "): " +
                         "\nGPS: " + Math.Round(full_calck_distance / 100 * adjustment_percent_factor, 2) + "/" + full_calck_distance + " м." +
                         "\nMan: " + Math.Round(full_manual_distance / 100 * adjustment_percent_factor, 2) + "/" + full_manual_distance + " м.";
                 }
@@ -166,7 +233,14 @@ namespace GpsMapRoutes
             }
         }
 
+        /// <summary>
+        /// Вспомогательные переменные для определения расчётного отклонения позиции на отрезке маршрута сегмента
+        /// </summary>
         double full_calck_distance, full_manual_distance, adjustment_percent_factor;
+
+        /// <summary>
+        /// Текущее положение ползунка слайдера
+        /// </summary>
         protected double adjustment; double λ;
         public double Adjustment
         {
@@ -250,6 +324,9 @@ namespace GpsMapRoutes
         }
 
         #region commands
+        /// <summary>
+        /// Сброс ползунка слайдера в исходное/сбалансированое состояние
+        /// </summary>
         private RelayCommand resetAdjustmentCommand;
         public RelayCommand ResetAdjustmentCommand
         {
@@ -264,14 +341,6 @@ namespace GpsMapRoutes
             }
         }
         #endregion
-
-        public ApplicationSensorViewModel(ApplicationViewModel setOwner, SensorWindow sensorWindow)
-        {
-            OwnerContext = setOwner;
-            OwnerWindow = sensorWindow;
-            OwnerWindow.MainMap.OnPositionChanged += delegate (PointLatLng point) { OnPropertyChanged(nameof(CalculationInfo)); };
-            OwnerWindow.MainMap.Loaded += delegate (object sender, System.Windows.RoutedEventArgs e) { ResetAdjustmentCommand.Execute(null); };
-        }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {

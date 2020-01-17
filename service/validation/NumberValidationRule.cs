@@ -7,6 +7,9 @@ using System.Windows.Controls;
 
 namespace GpsMapRoutes
 {
+    /// <summary>
+    /// Валидатор double
+    /// </summary>
     public class NumberValidationRule : ValidationRule
     {
         public double result;
