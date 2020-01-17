@@ -132,7 +132,7 @@
                     </ListView>
                 </StackPanel>
             </Expander>
-            <local:Map Grid.Row="1" x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
+            <local:Map MapProvider="{Binding MapProvider}" Grid.Row="1" x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
             <TextBox IsReadOnly="True" Grid.Row="2" Background="LightGray">
                 <TextBox.Text>
                     <Binding Path="Status"/>

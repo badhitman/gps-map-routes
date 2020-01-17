@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GpsMapRoutes"
+        xmlns:mapproviders="clr-namespace:GMap.NET.MapProviders;assembly=GMap.NET.Core"
         mc:Ignorable="d"
         Title="Point edit" MinHeight="500" Height="600" MinWidth="250" Width="480">
     <Grid>
@@ -81,7 +82,7 @@
                 </TextBox.Text>
             </TextBox>
         </GroupBox>
-        <local:Map IsEnabled="False"  IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="3" x:Name="MainMap" Zoom="13" MaxZoom="17" MinZoom="10" />
+        <local:Map MapProvider="{Binding MapProvider}" IsEnabled="False"  IsManipulationEnabled="False" CanDragMap="False" AllowDrop="False" Grid.Row="3" x:Name="MainMap" Zoom="13" MaxZoom="17" MinZoom="10" />
         <GroupBox BorderThickness="0,1" Header="Перспективы" Grid.Row="4">
             <Grid>
                 <Grid.RowDefinitions>

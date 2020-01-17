@@ -10,9 +10,9 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using GMap.NET;
+using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using GpsMapRoutes.models;
-using GpsMapRoutes.service;
 using GpsMapRoutes.service.commands;
 
 namespace GpsMapRoutes
@@ -25,6 +25,7 @@ namespace GpsMapRoutes
         public static PointLatLng DefaultPoint = new PointLatLng(55.755812, 37.617820);
 
         private bool autoPositionCenter = false;
+        private bool autoSaveSensorState = false;
 
         private void SaveSensorState()
         {
@@ -32,18 +33,20 @@ namespace GpsMapRoutes
             {
                 return;
             }
+            if (autoSaveSensorState)
+            {
+                SelectedSensor.Lat = Lat;
+                SelectedSensor.Lng = Lng;
+                SelectedSensor.Distance = Distance;
 
-            SelectedSensor.Lat = Lat;
-            SelectedSensor.Lng = Lng;
-            SelectedSensor.Distance = Distance;
+                db.Sensors.Attach(SelectedSensor);
+                db.Entry(SelectedSensor).State = EntityState.Unchanged;
+                db.Entry(SelectedSensor).Property(x => x.Lat).IsModified = true;
+                db.Entry(SelectedSensor).Property(x => x.Lng).IsModified = true;
+                db.Entry(SelectedSensor).Property(x => x.Distance).IsModified = true;
+                db.SaveChangesAsync();
+            }
 
-            db.Sensors.Attach(SelectedSensor);
-            db.Entry(SelectedSensor).State = EntityState.Unchanged;
-            db.Entry(SelectedSensor).Property(x => x.Lat).IsModified = true;
-            db.Entry(SelectedSensor).Property(x => x.Lng).IsModified = true;
-            db.Entry(SelectedSensor).Property(x => x.Distance).IsModified = true;
-            db.SaveChangesAsync();
-            
             ReloadPipe();
 
             if (autoPositionCenter)
@@ -223,7 +226,9 @@ namespace GpsMapRoutes
                       OnPropertyChanged(nameof(Lat)); OnPropertyChanged(nameof(Lng)); OnPropertyChanged(nameof(Distance));
 
                       autoPositionCenter = true;
+                      autoSaveSensorState = true;
                       sensorEditWindow.ShowDialog();
+                      autoSaveSensorState = false;
                       autoPositionCenter = false;
 
                       lat = 0;
@@ -266,6 +271,17 @@ namespace GpsMapRoutes
         #endregion
 
         #region props
+        private GMapProvider gMapProvider = GMapProviders.YandexHybridMap;
+        public GMapProvider MapProvider
+        {
+            get => gMapProvider;
+            set
+            {
+                gMapProvider = value;
+                OnPropertyChanged(nameof(GMapProvider));
+            }
+        }
+
         private PipelineModel selectedPipeline;
         public PipelineModel SelectedPipeline
         {

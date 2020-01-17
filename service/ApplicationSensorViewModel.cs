@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using GMap.NET;
+using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using GpsMapRoutes.models;
 using GpsMapRoutes.service.commands;
@@ -71,6 +72,17 @@ namespace GpsMapRoutes
         public string MidleSensorDistance => PrewSensor is null || NextSensor is null ? "" : SelectedSensorDistance.ToString();
         public string NextSensorDistance => PrewSensor is null && NextSensor is null ? "" : NextSensor is null ? SelectedSensorDistance.ToString() : "(+" + (NextSensor.Distance - SelectedSensorDistance) + ") " + NextSensor.Distance.ToString();
         #endregion
+
+        private GMapProvider gMapProvider = GMapProviders.YandexHybridMap;
+        public GMapProvider MapProvider
+        {
+            get => gMapProvider;
+            set
+            {
+                gMapProvider = value;
+                OnPropertyChanged(nameof(GMapProvider));
+            }
+        }
 
         public string Information
         {
@@ -259,8 +271,6 @@ namespace GpsMapRoutes
             OwnerWindow = sensorWindow;
             OwnerWindow.MainMap.OnPositionChanged += delegate (PointLatLng point) { OnPropertyChanged(nameof(CalculationInfo)); };
             OwnerWindow.MainMap.Loaded += delegate (object sender, System.Windows.RoutedEventArgs e) { ResetAdjustmentCommand.Execute(null); };
-            //OnPropertyChanged(nameof(MinAdjustment));
-            //OnPropertyChanged(nameof(MaxAdjustment));
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")
